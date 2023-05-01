@@ -57,6 +57,17 @@ const createUsers = async (req, res) => {
     }
 }
 
+const getAdminList = async (req, res) => {
+    try {
+        const adminList = await Users.find({ role: 'admin' });
+        // console.log("Admin list", adminList);
+        res.send(adminList);
+        // res.status(201).json({ message: "Successful" });
+    } catch (error) {
+        console.log(error);
+    }
+}
+
 const deleteUsers = async (req, res) => {
     // console.log("req.user from delete api", req.user);
     // console.log("req.session from delete api", req.session);
@@ -131,7 +142,7 @@ const logout = (req, res) => {
 }
 
 module.exports = {
-    createUsers, login, logout, deleteUsers
+    createUsers, login, logout, deleteUsers, getAdminList
 }
 
 // module.exports.userControllerr.login = login;

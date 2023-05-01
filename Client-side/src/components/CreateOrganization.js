@@ -1,12 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import {
-    getTodos,
-    deleteTodo,
     editTodo,
-    markTodoCompleted,
-    clearAlltodo, deleteUserTodo
 } from "../redux/actions";
+import { getAllOrganization, createOrganization } from "../redux/actions/organizationAction";
+
 const CreateOrganization = () => {
     const [value, setValue] = useState({});
     const [query, setquery] = useState('');
@@ -15,22 +13,22 @@ const CreateOrganization = () => {
         list: []
     })
     const dispatch = useDispatch();
-    const todos = useSelector((state) => state?.todoReducer?.todos);
+    const organizations = useSelector((state) => state?.organizationReducer?.organization);
     const [selectedTodo, setSelectedTodo] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [rowPerPAge, setRowPerPage] = useState(5);
     const [search, setSearch] = useState();
     const pageNumbers = [];
 
-    // console.log('my todo', todos);
+    // console.log('my todo', organization);
     let todoLength;
-    if (todos.length) {
-        todoLength = todos.length;
+    if (organizations.length) {
+        todoLength = organizations.length;
     }
     // console.log('todo length', todoLength);
 
     useEffect(() => {
-        dispatch(getTodos());
+        dispatch(getAllOrganization());
     }, [])
 
     //  **************** Pagination Logic *******************
@@ -42,7 +40,7 @@ const CreateOrganization = () => {
     const indexOfLastRowOfCurrentPage = currentPage * rowPerPAge;
     const indexOfFirstRowOfCurrentPage = indexOfLastRowOfCurrentPage - rowPerPAge;
 
-    const currentRows = todos.slice(indexOfFirstRowOfCurrentPage, indexOfLastRowOfCurrentPage);
+    const currentRows = organizations.slice(indexOfFirstRowOfCurrentPage, indexOfLastRowOfCurrentPage);
 
     const paginate = (pageNumber) => {
         setCurrentPage(pageNumber);
@@ -58,7 +56,7 @@ const CreateOrganization = () => {
     }
 
     const handleNext = () => {
-        if (currentPage !== Math.ceil(todos.length / rowPerPAge))
+        if (currentPage !== Math.ceil(organizations.length / rowPerPAge))
             setCurrentPage(currentPage + 1);
     }
 
@@ -80,13 +78,10 @@ const CreateOrganization = () => {
         }
     };
 
-    const changeEvent = (e, id) => {
-        if (e?.target?.checked === true) {
-            setSelectedTodo(id);
-        }
-        if (e?.target?.checked === false) {
-            setSelectedTodo([]);
-        }
+    const changeEvent = (e) => {
+        setValue({
+            ...value, [e.target.name]: e.target.value,
+        })
     }
 
     /**
@@ -95,8 +90,8 @@ const CreateOrganization = () => {
 
 
     const handleChange = (e) => {
-        const results = todos.filter(post => {
-            if (e.target.value === "") return todos
+        const results = organizations.filter(post => {
+            if (e.target.value === "") return organizations
             return post.title.toLowerCase().includes(e.target.value.toLowerCase())
         })
         setstate({
@@ -104,21 +99,24 @@ const CreateOrganization = () => {
             list: results
         })
     }
-    const onSubmit = () => {
-
+    const onSubmit = (e) => {
+        e.preventDefault();
+        dispatch(createOrganization(value));
+        setValue({ name: "", password: "" });
+        document.getElementById("organizationForm").reset();
     }
     return (<>
         <div className="container bg-light  my-4 py-1 border rounded">
-            <form className="mt-3 mb-2 " id="todoForm" onSubmit={onSubmit}>
+            <form className="mt-3 mb-2 " id="organizationForm" onSubmit={onSubmit}>
                 <div className="row">
                     <div className="col-xl-3">
                         <label className="sr-only">Name</label>
                         <input
                             type="text"
-                            name="title"
+                            name="name"
                             className="form-control mb-2 mr-sm-3"
                             placeholder="Organization Name"
-                            defaultValue={value?.title}
+                            defaultValue={value?.name}
                             onChange={(e) => changeEvent(e)}
                         />
                     </div>
@@ -126,16 +124,28 @@ const CreateOrganization = () => {
                     <div className="col-xl-3">
                         <label className="sr-only">Description</label>
                         <input
-                            type="password"
-                            name="description"
+                            type="email"
+                            name="email"
                             className="form-control mb-2 mr-sm-3"
-                            placeholder="Password"
-                            defaultValue={value?.description}
+                            placeholder="Organization Email"
+                            defaultValue={value?.email}
                             onChange={(e) => changeEvent(e)}
                         />
                     </div>
 
-                    <div className="col-xl-3">
+                    <div className="col">
+                        <label className="sr-only">Details</label>
+                        <input
+                            type="text"
+                            name="details"
+                            className="form-control mb-2 mr-sm-3"
+                            placeholder="Organization Detail"
+                            defaultValue={value?.details}
+                            onChange={(e) => changeEvent(e)}
+                        />
+                    </div>
+
+                    <div className="">
                         <button className="btn btn-primary mb-2 " type="submit">
                             Submit
                         </button>
@@ -163,17 +173,21 @@ const CreateOrganization = () => {
                 <thead>
                     <tr>
                         <th scope="col"> Organization Name</th>
+                        <th scope="col">Organization Email</th>
                         <th scope="col">Organization Details</th>
-                        <th scope="col">Delete Organization</th>
+                        <th scope="col">Delete</th>
                     </tr>
                 </thead>
-                <tbody>
-                    <tr>
-                        <th scope="row">1</th>
-                        <td>Mark</td>
-                        <td>Delete</td>
-                    </tr>
-                </tbody>
+                {
+                    organizations.map((organization) => <tbody>
+                        <tr>
+                            <td >{organization.name}</td>
+                            <td>{organization.email}</td>
+                            <td>{organization.details}</td>
+                            <td>Delete</td>
+                        </tr>
+                    </tbody>
+                    )}
             </table>
         </div>
         <div className="container">

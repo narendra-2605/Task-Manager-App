@@ -29,21 +29,21 @@ const createOrganization = async (req, res) => {
 }
 
 const getOrganizationList = async (req, res) => {
-    if (req.session.passport) {
+    // if (req.session.passport) {
         // console.log("session from organization list:",req.session);
         try {
-            console.log("entered route");
+            // console.log("entered route");
             const organizationList = await Organizations.find()
             res.send(organizationList);
-            res.status(201).JSON({ message: "Successful" });
+            // res.status(201).json({ message: "Successful" });
         }
         catch (error) {
             console.log(error);
         }
-    }
-    else {
-        res.status(500).json({ message: "Please Login first:" });
-    }
+    // }
+    // else {
+    //     res.status(500).json({ message: "Please Login first:" });
+    // }
 }
 
 

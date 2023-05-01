@@ -1,15 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import {
-    getTodos,
-    deleteTodo,
-    editTodo,
-    markTodoCompleted,
-    clearAlltodo, deleteUserTodo
+    getorganizations, editTodo,
 } from "../redux/actions";
+import { getAllOrganization } from "../redux/actions/organizationAction";
 
 const CreateUser = () => {
-    
+
+    const organizations = useSelector((state) => state?.organizationReducer?.organization);
     const [value, setValue] = useState({});
     const [query, setquery] = useState('');
     const [state, setstate] = useState({
@@ -17,22 +15,23 @@ const CreateUser = () => {
         list: []
     })
     const dispatch = useDispatch();
-    const todos = useSelector((state) => state?.todoReducer?.todos);
+    // const organizations = useSelector((state) => state?.todoReducer?.organizations);
     const [selectedTodo, setSelectedTodo] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [rowPerPAge, setRowPerPage] = useState(5);
     const [search, setSearch] = useState();
     const pageNumbers = [];
 
-    // console.log('my todo', todos);
+    // console.log('my todo', organizations);
     let todoLength;
-    if (todos.length) {
-        todoLength = todos.length;
+    if (organizations.length) {
+        todoLength = organizations.length;
     }
     // console.log('todo length', todoLength);
 
     useEffect(() => {
-        dispatch(getTodos());
+        dispatch((getAllOrganization));
+
     }, [])
 
     //  **************** Pagination Logic *******************
@@ -44,7 +43,7 @@ const CreateUser = () => {
     const indexOfLastRowOfCurrentPage = currentPage * rowPerPAge;
     const indexOfFirstRowOfCurrentPage = indexOfLastRowOfCurrentPage - rowPerPAge;
 
-    const currentRows = todos.slice(indexOfFirstRowOfCurrentPage, indexOfLastRowOfCurrentPage);
+    const currentRows = organizations.slice(indexOfFirstRowOfCurrentPage, indexOfLastRowOfCurrentPage);
 
     const paginate = (pageNumber) => {
         setCurrentPage(pageNumber);
@@ -60,7 +59,7 @@ const CreateUser = () => {
     }
 
     const handleNext = () => {
-        if (currentPage !== Math.ceil(todos.length / rowPerPAge))
+        if (currentPage !== Math.ceil(organizations.length / rowPerPAge))
             setCurrentPage(currentPage + 1);
     }
 
@@ -97,8 +96,8 @@ const CreateUser = () => {
 
 
     const handleChange = (e) => {
-        const results = todos.filter(post => {
-            if (e.target.value === "") return todos
+        const results = organizations.filter(post => {
+            if (e.target.value === "") return organizations
             return post.title.toLowerCase().includes(e.target.value.toLowerCase())
         })
         setstate({
@@ -140,14 +139,13 @@ const CreateUser = () => {
                     <div className="col-xl-3">
                         <label className="sr-only">Select Admin</label>
                         <select className="form-select  mb-2 mr-sm-3" aria-label="Default select example">
-                            <option selected disabled>Select Organization</option>
-                            <option value="1">One</option>
-                            <option value="2">Two</option>
-                            <option value="3">Three</option>
-                        </select>
+                            {organizations.map((organization) =>
+                                <option value="1">{organization.name}</option>
+                            )} </select>
+
                     </div>
                     <div className="col-xl-3">
-                        <label className="sr-only">Select Organization</label>
+                        <label className="sr-only">Select Admin</label>
                         <select className="form-select  mb-2 mr-sm-3" aria-label="Default select example">
                             <option selected disabled>Select Admin</option>
                             <option value="1">One</option>

@@ -72,7 +72,7 @@ const Login = (props) => {
                     <input type="email" placeholder='Email' name='email' id='email' onChange={(e) => changeEvent(e)} required />
                     <input type="password" placeholder='Password' name='password' id='password' onChange={(e) => changeEvent(e)} required />
                     <span className="fa-sharp fa-solid fa-eye toggle" id="toggle" onClick={handleToggle}></span>
-                    <Link to={"/signUp"}>Don't have an account?</Link>
+                 
                     <button type="submit">Login</button>
                 </form>
             </div>

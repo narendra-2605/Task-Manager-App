@@ -20,6 +20,8 @@ module.exports = function routes(passport) {
 
     router.delete('/deleteUsers/:id', userController.deleteUsers);
 
+    router.get('/getAdminList', userController.getAdminList);
+
     return router;
 }
 

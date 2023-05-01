@@ -1,50 +1,49 @@
 import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import {
-    getTodos,
-    deleteTodo,
-    editTodo,
-    markTodoCompleted,
-    clearAlltodo, deleteUserTodo
-} from "../redux/actions";
+import { createAdmin } from "../redux/actions/authAdmin";
+import { getAllOrganization } from "../redux/actions/organizationAction";
+import { getAllAdmin } from '../redux/actions/authAdmin';
 
 const CreateAdmin = () => {
-    
-    const [value, setValue] = useState({});
+    const [data, setData] = useState({});
     const [query, setquery] = useState('');
     const [state, setstate] = useState({
         query: '',
         list: []
     })
     const dispatch = useDispatch();
-    const todos = useSelector((state) => state?.todoReducer?.todos);
+    const organizations = useSelector((state) => state?.organizationReducer?.organization);
+    const admins = useSelector((state) => state?.adminReducer?.admin)
     const [selectedTodo, setSelectedTodo] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [rowPerPAge, setRowPerPage] = useState(5);
     const [search, setSearch] = useState();
     const pageNumbers = [];
 
-    // console.log('my todo', todos);
-    let todoLength;
-    if (todos.length) {
-        todoLength = todos.length;
+    // console.log('my organization', organizations);
+    // console.log('my admins', admins);
+
+    let organizationLength;
+    if (organizations.length) {
+        organizationLength = organizations.length;
     }
-    // console.log('todo length', todoLength);
+    // console.log('organization length', organizationLength);
 
     useEffect(() => {
-        dispatch(getTodos());
+        dispatch(getAllAdmin());
+        dispatch(getAllOrganization());
     }, [])
 
     //  **************** Pagination Logic *******************
 
-    for (let i = 1; i <= Math.ceil(todoLength / rowPerPAge); i++) {
+    for (let i = 1; i <= Math.ceil(organizationLength / rowPerPAge); i++) {
         pageNumbers.push(i);
     }
 
     const indexOfLastRowOfCurrentPage = currentPage * rowPerPAge;
     const indexOfFirstRowOfCurrentPage = indexOfLastRowOfCurrentPage - rowPerPAge;
 
-    const currentRows = todos.slice(indexOfFirstRowOfCurrentPage, indexOfLastRowOfCurrentPage);
+    const currentRows = organizations.slice(indexOfFirstRowOfCurrentPage, indexOfLastRowOfCurrentPage);
 
     const paginate = (pageNumber) => {
         setCurrentPage(pageNumber);
@@ -60,7 +59,7 @@ const CreateAdmin = () => {
     }
 
     const handleNext = () => {
-        if (currentPage !== Math.ceil(todos.length / rowPerPAge))
+        if (currentPage !== Math.ceil(organizations.length / rowPerPAge))
             setCurrentPage(currentPage + 1);
     }
 
@@ -68,37 +67,26 @@ const CreateAdmin = () => {
 
     /**
      * actionClick Function
-     * @param {Todo list and Action type ->  Edit or Delete todo in JSON form} data
+     * @param {organization list and Action type ->  Edit or Delete organization in JSON form} data
      */
     const actionClick = (data) => {
-        if (data && data?.type === "edit") {
-            const idd = data.todo._id;
-            dispatch(editTodo(idd));
-        } else if (data && data?.type === "delete") {
-            const id = data.todo._id;
-            console.log("todo id from todoList action click", id)
-            // dispatch(deleteTodo(id));
-            // dispatch(deleteUserTodo(id));
-        }
+
     };
 
-    const changeEvent = (e, id) => {
-        if (e?.target?.checked === true) {
-            setSelectedTodo(id);
-        }
-        if (e?.target?.checked === false) {
-            setSelectedTodo([]);
-        }
+    const changeEvent = (e) => {
+        setData({
+            ...data, [e.target.name]: e.target.value,
+        });        // console.log("Value is :", value);
     }
 
     /**
-     * function to mark the perticular todo as completed
+     * function to mark the perticular organization as completed
      */
 
 
     const handleChange = (e) => {
-        const results = todos.filter(post => {
-            if (e.target.value === "") return todos
+        const results = organizations.filter(post => {
+            if (e.target.value === "") return organizations
             return post.title.toLowerCase().includes(e.target.value.toLowerCase())
         })
         setstate({
@@ -106,21 +94,22 @@ const CreateAdmin = () => {
             list: results
         })
     }
-    const onSubmit = () => {
-
+    const onSubmit = (e) => {
+        e.preventDefault();
+        dispatch(createAdmin(data));
     }
     return (<>
         <div className="container bg-light  my-4 py-1 border rounded">
-            <form className="mt-3 mb-2 " id="todoForm" onSubmit={onSubmit}>
+            <form className="mt-3 mb-2 " id="organizationForm" onSubmit={onSubmit}>
                 <div className="row">
                     <div className="col-xl-3">
                         <label className="sr-only">Name</label>
                         <input
                             type="text"
-                            name="title"
+                            name="name"
                             className="form-control mb-2 mr-sm-3"
                             placeholder="Admin Name"
-                            defaultValue={value?.title}
+                            defaultValue={data?.name}
                             onChange={(e) => changeEvent(e)}
                         />
                     </div>
@@ -129,10 +118,10 @@ const CreateAdmin = () => {
                         <label className="sr-only">Description</label>
                         <input
                             type="password"
-                            name="description"
+                            name="password"
                             className="form-control mb-2 mr-sm-3"
                             placeholder="Password"
-                            defaultValue={value?.description}
+                            defaultValue={data?.password}
                             onChange={(e) => changeEvent(e)}
                         />
                     </div>
@@ -140,13 +129,10 @@ const CreateAdmin = () => {
                     <div className="col-xl-3">
                         <label className="sr-only">Select Organization</label>
                         <select className="form-select  mb-2 mr-sm-3" aria-label="Default select example">
-                            <option selected disabled>Open this select menu</option>
-                            <option value="1">One</option>
-                            <option value="2">Two</option>
-                            <option value="3">Three</option>
-                        </select>
+                            {organizations.map((organization) =>
+                                <option value="1">{organization.name}</option>
+                            )} </select>
                     </div>
-
                     <div className="col-xl-3">
                         <button className="btn btn-primary mb-2 " type="submit">
                             Submit
@@ -179,13 +165,16 @@ const CreateAdmin = () => {
                         <th scope="col">Delete</th>
                     </tr>
                 </thead>
-                <tbody>
-                    <tr>
-                        <th scope="row">1</th>
-                        <td>Mark</td>
-                        <td>Delete</td>
-                    </tr>
-                </tbody>
+                {admins.map((admin) =>
+
+                    <tbody>
+                        <tr>
+                            <th scope="row">{admin.name}</th>
+                            <td>{admin.email}</td>
+                            <td>Delete</td>
+                        </tr>
+                    </tbody>
+                )}
             </table>
         </div>
         <div className="container">
