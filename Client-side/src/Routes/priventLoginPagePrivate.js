@@ -4,19 +4,24 @@ const PreventLoginPagePrivate = () => {
     let flag;
     if (JSON.parse(localStorage.getItem("user"))) {
         if (JSON.parse(localStorage.getItem("user"))['data']['user']['role'] === "user") {
-            flag = 0;
+            flag = 0; //user
         }
-        else {
+        else if (JSON.parse(localStorage.getItem("user"))['data']['user']['role'] === "admin") {
             flag = 1; // Redirect to Admin
         }
+        else {
+            flag = 2 // Redirect to super Admin
+        }
     } else {
-        flag = 2;
+        flag = 3;
     }
     return (
         <>
-
+            {
+                flag === 0 ? <Navigate to="/userTodo" /> : flag === 1 ? <Navigate to="/adminTodo" /> : flag === 2 ? <Navigate to="/createAdmin" /> : <Outlet />
+            }
             {/* flag ? <Outlet /> : <Navigate to="/" /> */}
-            {flag === 2 ? <Outlet /> : flag === 1 ? <Navigate to="/adminTodo" /> : <Navigate to="/userTodo" />}
+            {/* {flag === 3 ? <Outlet /> : flag === 1 ? <Navigate to="/adminTodo" /> : <Navigate to="/userTodo" />} */}
         </>
     )
 }

@@ -41,11 +41,11 @@ const Login = (props) => {
             }));
             return;
         }
-        console.log("Data:", data);
+        console.log("Data from login component:", data);
         dispatch(login(data)).then((res) => {
             console.log("role is ", res);
             props.setLogin(true);
-            { res === "admin" ? navigate("/adminTodo") : navigate("/userTodo") }
+            { res === 'superAdmin' ? navigate("/createAdmin") : res === 'admin' ? navigate('adminTodo') : navigate('/userTodo') }
         });
         setData({ email: "", password: "" });
         document.getElementById("loginForm").reset();
@@ -72,7 +72,7 @@ const Login = (props) => {
                     <input type="email" placeholder='Email' name='email' id='email' onChange={(e) => changeEvent(e)} required />
                     <input type="password" placeholder='Password' name='password' id='password' onChange={(e) => changeEvent(e)} required />
                     <span className="fa-sharp fa-solid fa-eye toggle" id="toggle" onClick={handleToggle}></span>
-                 
+
                     <button type="submit">Login</button>
                 </form>
             </div>
@@ -84,33 +84,3 @@ const Login = (props) => {
 }
 
 export default Login;
-
-
-
-
-
-
-
-
-
-
-            {/* <div className="col-4 m-auto mt-5 p-5 border"> */}
-            {/* <h3 className="text-center pb-2">Login Form</h3> */}
-            {/* <form onSubmit={handleLogin} id="loginForm">
-                    <div className="row">
-                        <div className="col-12 col-sm-12">
-                            <input type="email"
-                                name="email" placeholder="Email" className="form-control mb-2" onChange={(e) => changeEvent(e)} required />
-                            <span className="text-danger">{error?.email}</span>
-                        </div>
-                        <div className="col-12 col-sm-12">
-                            <input type="password"
-                                name="password" placeholder="Password" className="form-control mb-2" onChange={(e) => changeEvent(e)} required />
-                        </div>
-                        <div className="d-grid gap-2 d-md-flex justify-content-md-end">
-                            <Link to="/">Click here to Sign-up</Link>
-                            <button className=" btn btn-primary " type="submit"> Login
-                            </button>
-                        </div>
-                    </div>
-                </form> */}

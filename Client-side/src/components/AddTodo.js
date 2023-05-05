@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { addNewTodo, updateTodo } from "../redux/actions";
+import { addNewTodo, updateTodo, getTodos } from "../redux/actions";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -10,6 +10,7 @@ const AddTodo = () => {
   const dispatch = useDispatch();
   const isEdit = useSelector((state) => state?.todoReducer?.isEdit);
   const editTodo = useSelector((state) => state?.todoReducer?.editTodo);
+
   const userId = JSON.parse(localStorage.getItem("user"))['data']['user']['_id'];
 
   useEffect(() => {
@@ -29,55 +30,24 @@ const AddTodo = () => {
       ...value,
       [e.target.name]: e.target.value,
     });
-    if (e?.target?.name === "title") {
-      setError({
-        title: "",
-      });
-    }
-    if (e?.target?.name === "description") {
-      setError({
-        description: "",
-      });
-    }
   };
   /**
    * Function to handle the sumission of the todo form
    * @param {event} e 
-   * @returns 
+   * @returns sss
    */
   const onSubmit = (e) => {
     e.preventDefault();
-
-
-    if (!value?.title) {
-      setError((error) => ({
-        ...error,
-        title: "Please enter todo title",
-      }));
-      return;
-    }
-    if (!value?.description) {
-      setError((error) => ({
-        ...error,
-        description: "Please enter todo description",
-      }));
-      return;
-    }
     if (isEdit) {
       const id = value._id;
       dispatch(updateTodo(id, value));
     } else {
-      // setValue({
-      //   ...value,
-      //   userId: userId
-      // });
       console.log("value is ", value);
       dispatch(addNewTodo(value))
     }
     setValue({ title: "", description: "" });
     document.getElementById("todoForm").reset();
   };
-
 
   return (
     <>
@@ -94,7 +64,6 @@ const AddTodo = () => {
                 defaultValue={value?.title}
                 onChange={(e) => changeEvent(e)}
               />
-              <span className="text-danger">{error?.title}</span>
             </div>
 
             <div className="col-xl-3">
@@ -107,14 +76,12 @@ const AddTodo = () => {
                 defaultValue={value?.description}
                 onChange={(e) => changeEvent(e)}
               />
-              <span className="text-danger">{error?.description}</span>
             </div>
 
             <div className="col-xl-2">
               <button className="btn btn-primary mb-2" type="submit">
                 {" "}
                 {isEdit ? "Update Todo" : "Create Todo"}{" "}
-
               </button>
             </div>
           </div>

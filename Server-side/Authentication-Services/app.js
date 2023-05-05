@@ -15,10 +15,19 @@ const bodyParser = require('body-parser');
 const routes = require(path.join(__dirname, 'src/routes/route'))(passport);
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+// app.use((req, res, next) => {
+//     res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000')
+//     res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept')
+//     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE')
+//     res.setHeader('Access-Control-Allow-Credentials', true)
+
+//     next()
+// })
+// app.use(cors());
 app.use(cors({
-    origin: "http://localhost:3000", 
+    origin: 'http://localhost:3000',
     credentials: true
-}));
+}))
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
@@ -45,7 +54,7 @@ app.use(
         cookie: {
             secure: false, // if true only transmit cookie over https
             httpOnly: false, // if true prevent client side JS from reading the cookie 
-            maxAge: 1000 * 60 * 10 // session max age in miliseconds
+            maxAge: 1000 * 60 * 100 // session max age in miliseconds
         }
     })
 )

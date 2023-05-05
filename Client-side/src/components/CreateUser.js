@@ -4,10 +4,10 @@ import {
     getorganizations, editTodo,
 } from "../redux/actions";
 import { getAllOrganization } from "../redux/actions/organizationAction";
+import { createUser, deleteUser, getAllUser } from "../redux/actions/authAdminAction";
 
 const CreateUser = () => {
 
-    const organizations = useSelector((state) => state?.organizationReducer?.organization);
     const [value, setValue] = useState({});
     const [query, setquery] = useState('');
     const [state, setstate] = useState({
@@ -15,24 +15,28 @@ const CreateUser = () => {
         list: []
     })
     const dispatch = useDispatch();
-    // const organizations = useSelector((state) => state?.todoReducer?.organizations);
+    const userss = useSelector((state) => state?.adminReducer?.users);
+    const organizations = useSelector((state) => state?.organizationReducer?.organization);
     const [selectedTodo, setSelectedTodo] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [rowPerPAge, setRowPerPage] = useState(5);
     const [search, setSearch] = useState();
     const pageNumbers = [];
 
-    // console.log('my todo', organizations);
     let todoLength;
     if (organizations.length) {
         todoLength = organizations.length;
     }
-    // console.log('todo length', todoLength);
 
     useEffect(() => {
-        dispatch((getAllOrganization));
-
+        dispatch((getAllUser()));
+        dispatch((getAllOrganization()));
     }, [])
+
+    const deleteAction = (userId) => {
+        console.log("user Id from create user", userId);
+        dispatch(deleteUser(userId));
+    }
 
     //  **************** Pagination Logic *******************
 
@@ -76,18 +80,11 @@ const CreateUser = () => {
         } else if (data && data?.type === "delete") {
             const id = data.todo._id;
             console.log("todo id from todoList action click", id)
-            // dispatch(deleteTodo(id));
-            // dispatch(deleteUserTodo(id));
         }
     };
 
     const changeEvent = (e, id) => {
-        if (e?.target?.checked === true) {
-            setSelectedTodo(id);
-        }
-        if (e?.target?.checked === false) {
-            setSelectedTodo([]);
-        }
+        setValue({ ...value, [e.target.name]: e.target.value });
     }
 
     /**
@@ -105,21 +102,47 @@ const CreateUser = () => {
             list: results
         })
     }
-    const onSubmit = () => {
-
+    const onSubmit = (e) => {
+        e.preventDefault();
+        console.log("Value from create user", value);
+        dispatch(createUser(value));
     }
     return (<>
         <div className="container bg-light  my-4 py-1 border rounded">
-            <form className="mt-3 mb-2 " id="todoForm" onSubmit={onSubmit}>
+            <form className="mt-3 mb-2 " id="createUserForm" onSubmit={onSubmit}>
                 <div className="row">
+                    <div className="col-xl-3">
+                        <label className="sr-only">Username</label>
+                        <input
+                            type="text"
+                            name="username"
+                            className="form-control mb-2 mr-sm-3"
+                            placeholder="username"
+                            defaultValue={value?.username}
+                            onChange={(e) => changeEvent(e)}
+                        />
+                    </div>
+
                     <div className="col-xl-3">
                         <label className="sr-only">Name</label>
                         <input
                             type="text"
-                            name="title"
+                            name="name"
                             className="form-control mb-2 mr-sm-3"
-                            placeholder="User Name"
-                            defaultValue={value?.title}
+                            placeholder="Name"
+                            defaultValue={value?.name}
+                            onChange={(e) => changeEvent(e)}
+                        />
+                    </div>
+
+                    <div className="col-xl-3">
+                        <label className="sr-only">Email</label>
+                        <input
+                            type="text"
+                            name="email"
+                            className="form-control mb-2 mr-sm-3"
+                            placeholder="Email"
+                            defaultValue={value?.email}
                             onChange={(e) => changeEvent(e)}
                         />
                     </div>
@@ -128,32 +151,13 @@ const CreateUser = () => {
                         <label className="sr-only">Description</label>
                         <input
                             type="password"
-                            name="description"
+                            name="password"
                             className="form-control mb-2 mr-sm-3"
                             placeholder="Password"
-                            defaultValue={value?.description}
+                            defaultValue={value?.password}
                             onChange={(e) => changeEvent(e)}
                         />
                     </div>
-
-                    <div className="col-xl-3">
-                        <label className="sr-only">Select Admin</label>
-                        <select className="form-select  mb-2 mr-sm-3" aria-label="Default select example">
-                            {organizations.map((organization) =>
-                                <option value="1">{organization.name}</option>
-                            )} </select>
-
-                    </div>
-                    <div className="col-xl-3">
-                        <label className="sr-only">Select Admin</label>
-                        <select className="form-select  mb-2 mr-sm-3" aria-label="Default select example">
-                            <option selected disabled>Select Admin</option>
-                            <option value="1">One</option>
-                            <option value="2">Two</option>
-                            <option value="3">Three</option>
-                        </select>
-                    </div>
-
                     <div className="col-xl-3">
                         <button className="btn btn-primary mb-2 " type="submit">
                             Submit
@@ -187,14 +191,22 @@ const CreateUser = () => {
                         <th scope="col">Delete</th>
                     </tr>
                 </thead>
-                <tbody>
-                    <tr>
-                        <th scope="row">1</th>
-                        <td>Mark</td>
-                        <td>Mark</td>
-                        <td>Delete</td>
-                    </tr>
-                </tbody>
+                {userss?.map((user) =>
+                    <tbody>
+                        <tr>
+                            <th scope="row">{user.username}</th>
+                            <th scope="row">{user.name}</th>
+                            <td>{user.email}</td>
+                            <td>
+                                <button className="btn btn-danger btn-sm ml-1 tooltips"
+                                    onClick={() => deleteAction(user._id)} >
+                                    <i className="fa-solid fa-trash-can"></i>
+                                    {/* <span className="tooltiptext">Delete Todo</span> */}
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>
+                )}
             </table>
         </div>
         <div className="container">

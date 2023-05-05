@@ -1,4 +1,4 @@
-import { GET_ALL_ORGANIZATION, CREATE_ORGANIZATION } from './actionTypes';
+import { GET_ALL_ORGANIZATION, CREATE_ORGANIZATION, DELETE_ORGANIZATION } from './actionTypes';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -9,7 +9,6 @@ const localhostAuth = process.env.REACT_APP_authenticationService;
 export const getAllOrganization = () => async (dispatch) => {
     try {
         const response = await axios.get(localhostAuth + 'getOrganizationList');
-        // console.log("Reasponse is :", response);
         dispatch({
             type: GET_ALL_ORGANIZATION,
             payload: response.data
@@ -23,13 +22,29 @@ export const getAllOrganization = () => async (dispatch) => {
 
 export const createOrganization = (data) => async (dispatch) => {
     try {
-        const response = await axios.get(localhostAuth + 'createorganization');
+        console.log("data from org action:", data);
+        const response = await axios.post(localhostAuth + 'createorganization', data);
         console.log("response is from org action", response);
         dispatch({
             type: CREATE_ORGANIZATION,
-            payload: response.data
+            payload: response
         })
     } catch (error) {
-        console.log(error);
+        console.log("err", error);
+    }
+}
+
+export const deleteOrganization = (organizationId) => async (dispatch) => {
+    try {
+        console.log("task id from deleteOrganization", organizationId);
+        const response = axios.delete(localhostAuth + `deleteOrganization/${organizationId}`);
+        console.log("response is from org action", response);
+        dispatch({
+            type: DELETE_ORGANIZATION,
+            payload: response
+        })
+    }
+    catch (error) {
+        console.log('err', error);
     }
 }

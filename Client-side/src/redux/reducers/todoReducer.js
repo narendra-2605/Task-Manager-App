@@ -32,21 +32,10 @@ const todoReducer = (state = initialState, action) => {
         todos: action.payload
       }
     case ADD_TODO:
-      // console.log(action.payload);
-      // console.log('This is the ADD_TODO Case : ', action.payload);
-      // const { userId, id, title, description } = action.payload;
       return {
         ...state,
         todos: [
           ...state.todos,
-          // {
-          //   userId: userId,
-          //   id: id,
-          //   title: title,
-          //   description: description,
-          //   isCompleted: false,
-          //   isPending: true,
-          // },
         ],
         isEdit: action.isEdit,
       };
@@ -59,7 +48,7 @@ const todoReducer = (state = initialState, action) => {
 
     case EDIT_TODO:
       const editTodo = action.payload;
-      let newEditTodo = state.todos.find((item) => item._id === editTodo);
+      let newEditTodo = state?.todos?.tasks?.find((item) => item._id === editTodo);
       return {
         ...state,
         isEdit: action.isEdit,
@@ -67,23 +56,8 @@ const todoReducer = (state = initialState, action) => {
       };
 
     case UPDATE_TODO:
-      //  ***************** Below code is only for the update the Todos locally without using the database********************
-      // const { todoId, todoTitle, todoDescription } = action.payload;
-      // const { todoTitle, todoDescription } = action.payload;
-      // const todos = state.todos.filter((todo) => {
-      //   return todo.id !== todoId;
-      // });
-
-      // const todo = state.todos.find((todo) => todo?.id === todoId);
-      // todo.title = todoTitle;
-      // todo.description = todoDescription;
-      // todo.isCompleted = todo?.isCompleted;
-      // todo.isPending = todo?.isPending;
-      // todos.push(todo);
-      // ********************************************************
       return {
         ...state,
-        // todos: [...todos],
         isEdit: false,
       };
 

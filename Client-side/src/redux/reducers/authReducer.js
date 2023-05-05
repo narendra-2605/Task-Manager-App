@@ -1,4 +1,4 @@
-import { SIGN_UP, LOGIN, } from "../actions/actionTypes";
+import { LOGIN, LOG_OUT, SIGN_UP } from "../actions/actionTypes";
 
 const initialState = {
     profile: [],
@@ -21,6 +21,11 @@ const authReducer = (state = initialState, action) => {
                     }
                 ]
             };
+        case LOG_OUT:
+            return {
+                ...state,
+                profile: [...state.profile]
+            }
 
         case SIGN_UP:
             return {

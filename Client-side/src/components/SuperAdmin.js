@@ -25,21 +25,7 @@ const SuperAdmin = () => {
 
 
     return (<>
-        {/* <div className="container"> */}
         <div className="row">
-            {/* <div className="register-card shadow-lg  border col-4 ">
-                <h4>Create Organization</h4>
-                <h3>Enter The Credentials</h3>
-                <form className="register-form" onSubmit={handleOrganization} id="signUpForm">
-                    <input type="text" placeholder='Organization Name' name='name' id='name' onChange={(e) => changeEvent(e)} required />
-                    <input type="email" placeholder='Organization Email' name='email' id='email' onChange={(e) => changeEvent(e)} required />
-                    <input type="password" placeholder='Password' name='password' id='password' onChange={(e) => changeEvent(e)} required />
-                    <span className="fa-sharp fa-solid fa-eye toggle" id="toggle" onClick={handleToggle}></span>
-                    <Link to={"/"}>Already have an account?</Link>
-                    <button type='submit' id='submitBtn'>Create Organization</button>
-                </form>
-            </div> */}
-
             <div className="col-4">
                 <form className="border ml-4">
                     <div class="mb-3">

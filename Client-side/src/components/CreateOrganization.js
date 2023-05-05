@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import {
     editTodo,
 } from "../redux/actions";
-import { getAllOrganization, createOrganization } from "../redux/actions/organizationAction";
+import { getAllOrganization, createOrganization, deleteOrganization } from "../redux/actions/organizationAction";
 
 const CreateOrganization = () => {
     const [value, setValue] = useState({});
@@ -20,12 +20,10 @@ const CreateOrganization = () => {
     const [search, setSearch] = useState();
     const pageNumbers = [];
 
-    // console.log('my todo', organization);
     let todoLength;
     if (organizations.length) {
         todoLength = organizations.length;
     }
-    // console.log('todo length', todoLength);
 
     useEffect(() => {
         dispatch(getAllOrganization());
@@ -66,17 +64,10 @@ const CreateOrganization = () => {
      * actionClick Function
      * @param {Todo list and Action type ->  Edit or Delete todo in JSON form} data
      */
-    const actionClick = (data) => {
-        if (data && data?.type === "edit") {
-            const idd = data.todo._id;
-            dispatch(editTodo(idd));
-        } else if (data && data?.type === "delete") {
-            const id = data.todo._id;
-            console.log("todo id from todoList action click", id)
-            // dispatch(deleteTodo(id));
-            // dispatch(deleteUserTodo(id));
-        }
-    };
+    const deleteAction = (organizationId) => {
+        console.log("organizationId from create organization", organizationId);
+        dispatch(deleteOrganization(organizationId));
+    }
 
     const changeEvent = (e) => {
         setValue({
@@ -101,6 +92,7 @@ const CreateOrganization = () => {
     }
     const onSubmit = (e) => {
         e.preventDefault();
+        console.log("value from onsubmit create Organization", value)
         dispatch(createOrganization(value));
         setValue({ name: "", password: "" });
         document.getElementById("organizationForm").reset();
@@ -110,7 +102,6 @@ const CreateOrganization = () => {
             <form className="mt-3 mb-2 " id="organizationForm" onSubmit={onSubmit}>
                 <div className="row">
                     <div className="col-xl-3">
-                        <label className="sr-only">Name</label>
                         <input
                             type="text"
                             name="name"
@@ -122,7 +113,6 @@ const CreateOrganization = () => {
                     </div>
 
                     <div className="col-xl-3">
-                        <label className="sr-only">Description</label>
                         <input
                             type="email"
                             name="email"
@@ -134,7 +124,6 @@ const CreateOrganization = () => {
                     </div>
 
                     <div className="col">
-                        <label className="sr-only">Details</label>
                         <input
                             type="text"
                             name="details"
@@ -145,7 +134,7 @@ const CreateOrganization = () => {
                         />
                     </div>
 
-                    <div className="">
+                    <div className="col-1">
                         <button className="btn btn-primary mb-2 " type="submit">
                             Submit
                         </button>
@@ -184,7 +173,10 @@ const CreateOrganization = () => {
                             <td >{organization.name}</td>
                             <td>{organization.email}</td>
                             <td>{organization.details}</td>
-                            <td>Delete</td>
+                            <td>  <button className="btn btn-danger btn-sm ml-1 tooltips"
+                                onClick={() => deleteAction(organization._id)} >
+                                <i className="fa-solid fa-trash-can"></i>
+                            </button></td>
                         </tr>
                     </tbody>
                     )}

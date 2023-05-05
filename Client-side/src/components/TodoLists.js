@@ -22,12 +22,10 @@ const TodoLists = () => {
   const [search, setSearch] = useState();
   const pageNumbers = [];
 
-  // console.log('my todo', todos);
   let todoLength;
   if (todos.length) {
     todoLength = todos.length;
   }
-  // console.log('todo length', todoLength);
 
   useEffect(() => {
     dispatch(getTodos());
@@ -42,7 +40,7 @@ const TodoLists = () => {
   const indexOfLastRowOfCurrentPage = currentPage * rowPerPAge;
   const indexOfFirstRowOfCurrentPage = indexOfLastRowOfCurrentPage - rowPerPAge;
 
-  const currentRows = todos.slice(indexOfFirstRowOfCurrentPage, indexOfLastRowOfCurrentPage);
+  const currentRows = todos?.tasks?.slice(indexOfFirstRowOfCurrentPage, indexOfLastRowOfCurrentPage);
 
   const paginate = (pageNumber) => {
     setCurrentPage(pageNumber);
@@ -75,61 +73,19 @@ const TodoLists = () => {
     } else if (data && data?.type === "delete") {
       const id = data.todo._id;
       console.log("todo id from todoList action click", id)
-      // dispatch(deleteTodo(id));
       dispatch(deleteUserTodo(id));
     }
   };
 
-  const deleteTodoo = (data) => {
-    // console.log(data);
-    const id = data.todo._id;
-    console.log("todo id from todoList", id);
-    dispatch(deleteUserTodo(id));
+  const deleteTodoo = (taskId) => {
+    console.log("task id from todoList", taskId);
+    dispatch(deleteUserTodo(taskId));
   }
   /**
    * Function
    * @param {event} e
    * @param {todo Id} todoId
    */
-  // const changeEvent = (e, todoId) => {
-  //   if (e?.target?.name !== "select_all_todo" && e?.target?.checked === true) {
-  //     if (selectedTodo.indexOf(todoId) === -1) {
-  //       setSelectedTodo((todo) => [...todo, todoId]);
-  //     }
-  //   } else if (
-  //     e?.target?.name !== "select_all_todo" &&
-  //     e?.target?.checked === false
-  //   ) {
-  //     const todos = selectedTodo.filter((todo) => todo !== todoId);
-  //     setSelectedTodo(todos);
-  //   }
-
-  //   if (e?.target?.name === "select_all_todo" && e?.target?.checked === true) {
-  //     todos &&
-  //       todos.forEach((todo, index) => {
-  //         const allChkbox = document.getElementsByName(`todo_${index}`);
-
-  //         for (let chk of allChkbox) {
-  //           chk.checked = true;
-  //           let todoId = todo?.id;
-
-  //           setSelectedTodo((todo) => [...todo, todoId]);
-  //         }
-  //       });
-  //   } else if (
-  //     e?.target?.name === "select_all_todo" &&
-  //     e?.target?.checked === false
-  //   ) {
-  //     todos &&
-  //       todos.forEach((todo, index) => {
-  //         const allChkbox = document.getElementsByName(`todo_${index}`);
-  //         for (let chk of allChkbox) {
-  //           chk.checked = false;
-  //           setSelectedTodo([]);
-  //         }
-  //       });
-  //   }
-  // };
   const changeEvent = (e, id) => {
     if (e?.target?.checked === true) {
       setSelectedTodo(id);
@@ -153,7 +109,7 @@ const TodoLists = () => {
     list: []
   })
   const handleChange = (e) => {
-    const results = todos.filter(post => {
+    const results = todos?.tasks?.filter(post => {
       if (e.target.value === "") return todos
       return post.title.toLowerCase().includes(e.target.value.toLowerCase())
     })
@@ -166,7 +122,7 @@ const TodoLists = () => {
   return (<>
     <div className="container my-2 pt-2 bg-light rounded ">
       <div className="row pb-4" style={{ height: "60px" }}>
-        <div className="col-lg-2 col-md-3 col-sm-12 text-left">
+        <div className="col-lg-3 col-md-3 col-sm-12 text-left">
           <select className="form-select" onChange={(e) => handlePageSize(e)} >
             <option >Select No. Of Item</option>
             <option value="5" >5</option>
@@ -174,10 +130,10 @@ const TodoLists = () => {
             <option value="15">15</option>
           </select>
         </div>
-        <div className="col-lg-2 col-md-3 col-xm-12 ">
+        <div className="col-lg-3 col-md-3 col-xm-12 ">
           <input className="form-control mb-2 mr-sm-3" onChange={handleChange} value={state.query} type="search" placeholder=" Search by Name :" />
         </div>
-        <div className="col-lg-8 col-md-6 col-xm-12 text-right">
+        <div className="col-lg-6 col-md-6 col-xm-12 text-right">
           <button className="btn btn-danger" onClick={() => dispatch(clearAlltodo())}  > Clear Todos   </button>
           {selectedTodo.length > 0 && (
             <>
@@ -189,16 +145,10 @@ const TodoLists = () => {
         </div>
       </div>
 
-      {/* style={todoLength > 20 ? tableStyle : tableScrolls}  table-scroll */}
-      {/* style={{ color: todoLength>6 ? 'red' : 'blue' }} */}
-
-      {/* <table className={todoLength > 5 ? 'overflowYScroll table-scroll table table-bordered table-hover' : 'table table-bordered  table-hover '} > */}
-      {/* table-responsive  */}
       <table className="table table-bordered  overflow-y-scroll table-hover" id="myTable" >
         <thead>
           <tr>
             <th width="3%">
-              {/* <input  type={"checkbox"}  onChange={(e) => changeEvent(e)}  name={"select_all_todo"}/> */}
             </th>
             <th width="30%">Name</th>
             <th width="42%">Description</th>
@@ -206,23 +156,19 @@ const TodoLists = () => {
             <th width="20%">Action</th>
           </tr>
         </thead>
-
-        {/* {state.query === '' ? "No posts match the query" : !state.list.length ? "Your query did not return any results" : state.list.map((post, index) => { */}
         {
           state.query === ''
             ?
             <tbody >
               {
-                // todos && todos?.map((todo, index) => (
-                currentRows.map((todo, index) => (
-
+                currentRows?.map((todo, index) => (
                   <tr key={index}>
                     <td>
                       <input type={"checkbox"}
                         value={todo?._id} onChange={(e) => changeEvent(e, todo._id)}
                         name={`todo_${index}`} />
                     </td>
-                    <td>{todo?.title}  </td>
+                    <td>{todo?.title}{todo?._id}  </td>
                     <td>{todo?.description} {todo?._id}</td>
                     <td>
                       {todo?.isCompleted ? (
@@ -234,7 +180,8 @@ const TodoLists = () => {
                       )}
                     </td>
                     <td>
-                      {todo?.role ? null : <> <button
+                      {todo?.role ? null : <> 
+                      <button
                         className="btn btn-primary btn-sm bi bi-pencil tooltips"
                         onClick={() => actionClick({ todo: todo, type: "edit" })}  >
                         <i className="fa-solid fa-pencil"></i> <span className="tooltiptext">
@@ -242,8 +189,7 @@ const TodoLists = () => {
                         </span>
                       </button>
                         <button className="btn btn-danger btn-sm ml-1 tooltips"
-                          onClick={() => { deleteTodoo({ todo: todo }) }}
-                        // onClick={() => actionClick({ todo: todo, type: "delete" })}
+                          onClick={() => { deleteTodoo(todo?._id) }}
                         >
                           <i className="fa-solid fa-trash-can"></i>
                           <span className="tooltiptext">Delete Todo</span>

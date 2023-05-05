@@ -1,4 +1,4 @@
-import { GET_ALL_ORGANIZATION, CREATE_ORGANIZATION } from "../actions/actionTypes";
+import { GET_ALL_ORGANIZATION, CREATE_ORGANIZATION, DELETE_ORGANIZATION } from "../actions/actionTypes";
 
 const initialState = {
     organization: []
@@ -15,9 +15,15 @@ const organizationReducer = (state = initialState, action) => {
         case CREATE_ORGANIZATION:
             return {
                 ...state,
+                // action.payload
                 organization: [
-                    ...state.data
+                    ...state.organization
                 ]
+            }
+        case DELETE_ORGANIZATION:
+            return {
+                ...state,
+                organization: [...state.organization]
             }
 
         default:

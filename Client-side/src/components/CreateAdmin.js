@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { createAdmin } from "../redux/actions/authAdmin";
+import { createAdmin, getAllAdmin, deleteAdmin } from "../redux/actions/authAdminAction";
 import { getAllOrganization } from "../redux/actions/organizationAction";
-import { getAllAdmin } from '../redux/actions/authAdmin';
 
 const CreateAdmin = () => {
     const [data, setData] = useState({});
@@ -20,9 +19,6 @@ const CreateAdmin = () => {
     const [search, setSearch] = useState();
     const pageNumbers = [];
 
-    // console.log('my organization', organizations);
-    // console.log('my admins', admins);
-
     let organizationLength;
     if (organizations.length) {
         organizationLength = organizations.length;
@@ -34,6 +30,10 @@ const CreateAdmin = () => {
         dispatch(getAllOrganization());
     }, [])
 
+    const deleteAction = (adminId) => {
+        console.log("adminId from create admin", adminId);
+        dispatch(deleteAdmin(adminId));
+    }
     //  **************** Pagination Logic *******************
 
     for (let i = 1; i <= Math.ceil(organizationLength / rowPerPAge); i++) {
@@ -69,14 +69,10 @@ const CreateAdmin = () => {
      * actionClick Function
      * @param {organization list and Action type ->  Edit or Delete organization in JSON form} data
      */
-    const actionClick = (data) => {
-
-    };
-
     const changeEvent = (e) => {
         setData({
             ...data, [e.target.name]: e.target.value,
-        });        // console.log("Value is :", value);
+        });     
     }
 
     /**
@@ -96,6 +92,7 @@ const CreateAdmin = () => {
     }
     const onSubmit = (e) => {
         e.preventDefault();
+        console.log("Data from create Admin", data)
         dispatch(createAdmin(data));
     }
     return (<>
@@ -103,19 +100,43 @@ const CreateAdmin = () => {
             <form className="mt-3 mb-2 " id="organizationForm" onSubmit={onSubmit}>
                 <div className="row">
                     <div className="col-xl-3">
+                        <label className="sr-only">Username</label>
+                        <input
+                            type="text"
+                            name="username"
+                            className="form-control mb-2 mr-sm-3"
+                            placeholder="username"
+                            defaultValue={data?.username}
+                            onChange={(e) => changeEvent(e)}
+                        />
+                    </div>
+
+                    <div className="col-xl-3">
                         <label className="sr-only">Name</label>
                         <input
                             type="text"
                             name="name"
                             className="form-control mb-2 mr-sm-3"
-                            placeholder="Admin Name"
+                            placeholder="Name"
                             defaultValue={data?.name}
                             onChange={(e) => changeEvent(e)}
                         />
                     </div>
 
                     <div className="col-xl-3">
-                        <label className="sr-only">Description</label>
+                        <label className="sr-only">Email</label>
+                        <input
+                            type="text"
+                            name="email"
+                            className="form-control mb-2 mr-sm-3"
+                            placeholder="Email"
+                            defaultValue={data?.email}
+                            onChange={(e) => changeEvent(e)}
+                        />
+                    </div>
+
+                    <div className="col-xl-3">
+                        <label className="sr-only">Password</label>
                         <input
                             type="password"
                             name="password"
@@ -128,11 +149,13 @@ const CreateAdmin = () => {
 
                     <div className="col-xl-3">
                         <label className="sr-only">Select Organization</label>
-                        <select className="form-select  mb-2 mr-sm-3" aria-label="Default select example">
+                        <select className="form-select  mb-2 mr-sm-3" aria-label="Default select example" name="orgId" onChange={(e) => changeEvent(e)} >
+                            <option>Select Organization</option>
                             {organizations.map((organization) =>
-                                <option value="1">{organization.name}</option>
+                                <option value={organization._id}>{organization.name}</option>
                             )} </select>
                     </div>
+
                     <div className="col-xl-3">
                         <button className="btn btn-primary mb-2 " type="submit">
                             Submit
@@ -160,18 +183,23 @@ const CreateAdmin = () => {
             <table class=" table table-hover  table-bordered ">
                 <thead>
                     <tr>
+                        <th scope="col">Username</th>
                         <th scope="col">Name</th>
-                        <th scope="col">Organization</th>
+                        <th scope="col">Email</th>
                         <th scope="col">Delete</th>
                     </tr>
                 </thead>
                 {admins.map((admin) =>
-
                     <tbody>
                         <tr>
+                            <th scope="row">{admin.username}</th>
                             <th scope="row">{admin.name}</th>
                             <td>{admin.email}</td>
-                            <td>Delete</td>
+                            <td>  <button className="btn btn-danger btn-sm ml-1 tooltips"
+                                onClick={() => deleteAction(admin._id)} >
+                                <i className="fa-solid fa-trash-can"></i>
+                                {/* <span className="tooltiptext">Delete Todo</span> */}
+                            </button></td>
                         </tr>
                     </tbody>
                 )}

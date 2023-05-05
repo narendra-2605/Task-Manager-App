@@ -1,3 +1,4 @@
+const bodyParser = require('body-parser').json();
 const userController = require('../controllers/user.controller');
 const organizationController = require('../controllers/organization.controller');
 
@@ -14,13 +15,19 @@ module.exports = function routes(passport) {
 
     router.get('/getOrganizationList', organizationController.getOrganizationList);
 
-    router.post('/createUsers', userController.createUsers);
+    router.delete('/deleteOrganization/:organizationId', organizationController.deleteOrganization);
+
+    router.post('/createAdmin', bodyParser, userController.createAdmin);
+
+    router.post('/createUser', userController.createUser);
 
     router.post('/logout', userController.logout);
 
-    router.delete('/deleteUsers/:id', userController.deleteUsers);
+    router.delete('/deleteUsers/:userId', userController.deleteUsers);
 
     router.get('/getAdminList', userController.getAdminList);
+
+    router.get('/getUserList', userController.getUserList);
 
     return router;
 }
