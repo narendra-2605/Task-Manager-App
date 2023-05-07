@@ -13,5 +13,7 @@ router.put('/updateTask/:id', taskController.updateTask);
 
 router.delete('/deleteTask/:id', taskController.deleteTask);
 
+router.put('/updateStatus/:id', taskController.updateStatus);
+
 
 module.exports = router;

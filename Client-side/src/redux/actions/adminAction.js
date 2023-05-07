@@ -1,5 +1,5 @@
 import {
-    GET_ALL_USER, DELETE_USER, ADD_TODO_ADMIN, GET_ADMIN_TODO, DELETE_ADMIN_TODO, UPDATE_ADMIN_TODO, EDIT_ADMIN_TODO
+    GET_ALL_USER, DELETE_USER, ADD_TODO_ADMIN, GET_ADMIN_TODO, DELETE_ADMIN_TODO, UPDATE_ADMIN_TODO, EDIT_ADMIN_TODO,MARK_ADMIN_TODO_COMPLETED
 } from './actionTypes';
 import axios from "axios";
 
@@ -79,7 +79,7 @@ export const getAdminTodos = () => async (dispatch) => {
 }
 
 export const editAdminTodo = (id) => (dispatch) => {
-    console.log("editAdminTodo is called:",id)
+    console.log("editAdminTodo is called:", id)
     dispatch({
         type: EDIT_ADMIN_TODO,
         payload: id,
@@ -119,4 +119,17 @@ export const deleteAdminTodo = (id) => async (dispatch) => {
         console.log(error);
         toast.error(error?.response?.data?.message, { autoClose: 1500 });
     }
+}
+
+export const markTodoCompleted = (id) => async (dispatch) => {
+    const response = axios.put(`${localhostUserAction}/updateStatus/${id}`);
+    if (response) {
+        toast.success('Marked Completed Successfully', { autoClose: 1500 })
+    } else {
+        toast.error('Something Went Wrong', { autoClose: 1500 });
+    }
+    dispatch({
+        type: MARK_ADMIN_TODO_COMPLETED,
+        payload: response
+    });
 }

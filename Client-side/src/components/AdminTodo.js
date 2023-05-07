@@ -2,7 +2,7 @@ import React from "react";
 import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { ToastContainer } from 'react-toastify';
-import { getAllUser, deleteUser, addTodo, getAdminTodos, deleteAdminTodo, updateAdminTask, editAdminTodo } from "../redux/actions/adminAction";
+import { getAllUser, deleteUser, addTodo, getAdminTodos, deleteAdminTodo, updateAdminTask, editAdminTodo, markTodoCompleted } from "../redux/actions/adminAction";
 
 import "./style.css";
 
@@ -12,8 +12,9 @@ const AdminTodo = () => {
     const updateTask = useSelector((state) => state?.adminReducer?.updateTodo);
     const users = useSelector((state) => state?.adminReducer.users);
     const adminTodoLists = useSelector((state) => state?.adminReducer.adminTodoList);
-    console.log("adminTodo List", adminTodoLists);
+    // console.log("adminTodo List", adminTodoLists);
     const [value, setValue] = useState({});
+    const [selectedTodo, setSelectedTodo] = useState([]);
     const userId = JSON.parse(localStorage.getItem("user"))['data']['user']['_id'];
 
     useEffect(() => {
@@ -50,6 +51,20 @@ const AdminTodo = () => {
         dispatch(deleteAdminTodo(todoId));
     }
 
+    const checkEvent = (e, id) => {
+        if (e?.target?.checked === true) {
+            setSelectedTodo(id);
+        }
+        if (e?.target?.checked === false) {
+            setSelectedTodo([]);
+        }
+    }
+
+    const markCompleted = () => {
+        console.log('Selected todo markCompleted:', selectedTodo);
+        dispatch(markTodoCompleted(selectedTodo));
+    };
+
     const onSubmit = (e) => {
         e.preventDefault();
         if (isEdit) {
@@ -61,6 +76,61 @@ const AdminTodo = () => {
             dispatch(addTodo(value));
         }
     }
+
+    //   ***************  Pagination *****************
+
+    const [state, setstate] = useState({
+        query: '', list: []
+    })
+    const [currentPage, setCurrentPage] = useState(1);
+    const [rowPerPAge, setRowPerPage] = useState(5);
+    const pageNumbers = [];
+
+    const handleChange = (e) => {
+        const results = adminTodoLists?.tasks?.filter(post => {
+            if (e.target.value === "") return adminTodoLists
+            return post.title.toLowerCase().includes(e.target.value.toLowerCase())
+        })
+        setstate({
+            query: e.target.value,
+            list: results
+        })
+    }
+
+    let todoLength;
+    if (adminTodoLists.length) {
+        todoLength = adminTodoLists.length;
+    }
+
+
+    for (let i = 1; i <= Math.ceil(todoLength / rowPerPAge); i++) {
+        pageNumbers.push(i);
+    }
+
+    const indexOfLastRowOfCurrentPage = currentPage * rowPerPAge;
+    const indexOfFirstRowOfCurrentPage = indexOfLastRowOfCurrentPage - rowPerPAge;
+
+    const currentRows = adminTodoLists?.tasks?.slice(indexOfFirstRowOfCurrentPage, indexOfLastRowOfCurrentPage);
+
+    const paginate = (pageNumber) => {
+        setCurrentPage(pageNumber);
+    }
+
+    const handlePageSize = (e) => {
+        setRowPerPage(e.target.value);
+        setCurrentPage(1);
+    }
+
+    const handlePrevious = () => {
+        if (currentPage !== 1) setCurrentPage(currentPage - 1);
+    }
+
+    const handleNext = () => {
+        if (currentPage !== Math.ceil(adminTodoLists.length / rowPerPAge))
+            setCurrentPage(currentPage + 1);
+    }
+
+    //*********************************** */
 
     return (
         <>
@@ -94,8 +164,8 @@ const AdminTodo = () => {
                             <label className="sr-only">Select User</label>
                             <select className="form-select  mb-2 mr-sm-3" aria-label="Default select example" name="userId" onChange={(e) => changeEvent(e)} >
                                 <option>Select User</option>
-                                {users?.userList?.map((user) =>
-                                    <option value={user._id}>{user.name}</option>
+                                {users?.userList?.map((user, index) =>
+                                    <option key={index} value={user._id}>{user.name}</option>
                                 )}
                             </select>
                         </div>}
@@ -111,38 +181,118 @@ const AdminTodo = () => {
                 </form>
             </div>
 
-            <div className="container bg-light rounded shadow-lg  mt-3 p-3">
+            <div className="container bg-light my-4 py-1 border rounded">
                 <h3 className="text-center ">Admin Todo List</h3>
-                <table className="table table-bordered table-hover text-center bg-light ">
+                <div className="row pb-4" style={{ height: "60px" }}>
+                    <div className="col-lg-3 col-md-3 col-sm-12 text-left">
+                        <select className="form-select" onChange={(e) => handlePageSize(e)} >
+                            <option >Select No. Of Item</option>
+                            <option value="5" >5</option>
+                            <option value="10">10</option>
+                            <option value="15">15</option>
+                        </select>
+                    </div>
+                    <div className="col-lg-3 col-md-3 col-xm-12 ">
+                        <input className="form-control mb-2 mr-sm-3" onChange={handleChange} value={state.query} type="search" placeholder=" Search by Name :" />
+                    </div>
+                    <div className="col-lg-6 col-md-6 col-xm-12 text-right">
+                        {/* <button className="btn btn-danger" onClick={() => dispatch(clearAlltodo())}  > Clear Todos   </button> */}
+                        {selectedTodo.length > 0 && (
+                            <>
+                                <button className="btn btn-success ml-2" onClick={markCompleted}>
+                                    Mark As Completed
+                                </button>
+                            </>
+                        )}
+                    </div>
+                </div>
+
+
+                <table className="table table-bordered table-hover text-center ">
                     <thead>
                         <tr>
+                            <th></th>
                             <th width="30%">Title</th>
                             <th width="50%">Description</th>
+                            <th>Status</th>
                             <th width="20%"></th>
                         </tr>
                     </thead>
-                    <tbody>
-                        {
-                            adminTodoLists && adminTodoLists?.tasks?.map((todo, index) => (
-                                <tr key={index}>
-                                    <td>{todo?.title}</td>
-                                    <td>{todo?.description}</td>
-                                    <td>
-                                        <button
-                                            className="btn btn-primary btn-sm bi bi-pencil tooltips"
-                                            onClick={() => actionClick({ todo: todo, type: "edit" })}  >
-                                            <i className="fa-solid fa-pencil"></i><span className="tooltiptext">   Edit Todo
-                                            </span>
-                                        </button>
-                                        <button className="btn btn-danger btn-sm ml-3 tooltips" onClick={(e) => handleDeleteTodo(e, todo?._id)}>
-                                            <i className="fa-solid fa-trash-can"></i>
-                                            <span className="tooltiptext">Delete Todo</span>
-                                        </button>
-                                    </td>
-                                </tr>
-                            ))
-                        }
-                    </tbody>
+
+                    {
+                        state.query === ''
+                            ?
+
+                            <tbody>
+                                {
+                                    adminTodoLists && adminTodoLists?.tasks?.map((todo, index) => (
+                                        <tr key={index}>
+                                            <td>
+                                                <input type={"checkbox"}
+                                                    value={todo?._id} onChange={(e) => checkEvent(e, todo._id)}
+                                                    name={`todo_${index}`} />
+                                            </td>
+                                            <td>{todo?.title}</td>
+                                            <td>{todo?.description}</td>
+                                            <td>
+                                                {todo?.status === 'completed' ? (
+                                                    <span className="badge text-bg-success p-2">Completed</span>
+                                                ) : todo?.status === 'pending' ? (
+                                                    <span className="badge text-bg-danger p-2">Pending</span>
+                                                ) : ''}
+                                            </td>
+
+                                            <td>
+                                                <button
+                                                    className="btn btn-primary btn-sm bi bi-pencil tooltips"
+                                                    onClick={() => actionClick({ todo: todo, type: "edit" })}  >
+                                                    <i className="fa-solid fa-pencil"></i><span className="tooltiptext">   Edit Todo
+                                                    </span>
+                                                </button>
+                                                <button className="btn btn-danger btn-sm ml-3 tooltips" onClick={(e) => handleDeleteTodo(e, todo?._id)}>
+                                                    <i className="fa-solid fa-trash-can"></i>
+                                                    <span className="tooltiptext">Delete Todo</span>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    ))
+                                }
+                            </tbody>
+                            :
+                            !state.list.length ? "Your query did not return any results" : state.list.map((post, index) => {
+                                return (
+                                    <tr key={index}>
+                                        <td>
+                                            <input type={"checkbox"}
+                                                value={post?._id} onChange={(e) => checkEvent(e, post._id)}
+                                                name={`todo_${index}`} />
+                                        </td>
+                                        <td>{post?.title}</td>
+                                        <td>{post?.description}</td>
+                                        <td>
+                                            {post?.status === 'completed' ? (
+                                                <span className="badge text-bg-success p-2">Completed</span>
+                                            ) : post?.status === 'pending' ? (
+                                                <span className="badge text-bg-danger p-2">Pending</span>
+                                            ) : ''}
+                                        </td>
+
+                                        <td>
+                                            <button
+                                                className="btn btn-primary btn-sm bi bi-pencil tooltips"
+                                                onClick={() => actionClick({ todo: post, type: "edit" })}  >
+                                                <i className="fa-solid fa-pencil"></i><span className="tooltiptext">   Edit Todo
+                                                </span>
+                                            </button>
+                                            <button className="btn btn-danger btn-sm ml-3 tooltips" onClick={(e) => handleDeleteTodo(e, post?._id)}>
+                                                <i className="fa-solid fa-trash-can"></i>
+                                                <span className="tooltiptext">Delete Todo</span>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                )
+                            })
+                    }
                 </table>
             </div>
             <ToastContainer />

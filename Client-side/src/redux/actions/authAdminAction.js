@@ -70,20 +70,20 @@ export const createUser = (data) => async (dispatch) => {
     }
 }
 
-export const getAllUser = () => async (dispatch) => {
-    try {
-        const response = await axios.get(localhostAuth + 'getUserList');
-        console.log("Response get all user authAdminAction ", response.data);
-        dispatch({
-            type: GET_ALL_USER,
-            payload: response.data.userList
-        })
-    }
-    catch (error) {
-        toast.error(error?.response?.data?.message, { autoClose: 1500 });
-        console.log("error getAllOrganization", error);
-    }
-}
+// export const getAllUser = () => async (dispatch) => {
+//     try {
+//         const response = await axios.get(localhostAuth + 'getUserList');
+//         console.log("Response get all user authAdminAction ", response.data);
+//         dispatch({
+//             type: GET_ALL_USER,
+//             payload: response.data.userList
+//         })
+//     }
+//     catch (error) {
+//         toast.error(error?.response?.data?.message, { autoClose: 1500 });
+//         console.log("error getAllOrganization", error);
+//     }
+// }
 
 export const deleteUser = (userId) => async (dispatch) => {
     try {

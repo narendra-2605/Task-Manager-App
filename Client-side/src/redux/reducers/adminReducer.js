@@ -1,4 +1,4 @@
-import { CREATE_ADMIN, GET_ALL_ADMIN, DELETE_ADMIN, CREATE_USER, DELETE_USER, ADD_TODO_ADMIN, GET_ALL_USER, GET_ADMIN_TODO, DELETE_ADMIN_TODO, UPDATE_ADMIN_TODO, EDIT_ADMIN_TODO } from "../actions/actionTypes";
+import { CREATE_ADMIN, GET_ALL_ADMIN, DELETE_ADMIN, CREATE_USER, DELETE_USER, ADD_TODO_ADMIN, GET_ALL_USER, GET_ADMIN_TODO, DELETE_ADMIN_TODO, UPDATE_ADMIN_TODO, EDIT_ADMIN_TODO, MARK_ADMIN_TODO_COMPLETED } from "../actions/actionTypes";
 
 const initialState = {
     data: [],
@@ -84,6 +84,12 @@ const adminReducer = (state = initialState, action) => {
             return {
                 ...state,
                 isEdit: false
+            }
+        case MARK_ADMIN_TODO_COMPLETED:
+            // const { selectedTodoId } = action.payload;
+            return {
+                ...state,
+                // adminTodoList: [...adminTodoList]
             }
 
         default:

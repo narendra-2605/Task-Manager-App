@@ -134,7 +134,7 @@ const TodoLists = () => {
           <input className="form-control mb-2 mr-sm-3" onChange={handleChange} value={state.query} type="search" placeholder=" Search by Name :" />
         </div>
         <div className="col-lg-6 col-md-6 col-xm-12 text-right">
-          <button className="btn btn-danger" onClick={() => dispatch(clearAlltodo())}  > Clear Todos   </button>
+          {/* <button className="btn btn-danger" onClick={() => dispatch(clearAlltodo())}  > Clear Todos   </button> */}
           {selectedTodo.length > 0 && (
             <>
               <button className="btn btn-success ml-2" onClick={markCompleted}>
@@ -155,6 +155,8 @@ const TodoLists = () => {
             <th width="8%">Status</th>
             <th width="20%">Action</th>
           </tr>
+
+          
         </thead>
         {
           state.query === ''
@@ -180,14 +182,14 @@ const TodoLists = () => {
                       )}
                     </td>
                     <td>
-                      {todo?.role ? null : <> 
-                      <button
-                        className="btn btn-primary btn-sm bi bi-pencil tooltips"
-                        onClick={() => actionClick({ todo: todo, type: "edit" })}  >
-                        <i className="fa-solid fa-pencil"></i> <span className="tooltiptext">
-                          Edit Todo
-                        </span>
-                      </button>
+                      {todo?.role ? null : <>
+                        <button
+                          className="btn btn-primary btn-sm bi bi-pencil tooltips"
+                          onClick={() => actionClick({ todo: todo, type: "edit" })}  >
+                          <i className="fa-solid fa-pencil"></i> <span className="tooltiptext">
+                            Edit Todo
+                          </span>
+                        </button>
                         <button className="btn btn-danger btn-sm ml-1 tooltips"
                           onClick={() => { deleteTodoo(todo?._id) }}
                         >

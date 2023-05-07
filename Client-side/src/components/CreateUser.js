@@ -3,8 +3,9 @@ import { useSelector, useDispatch } from "react-redux";
 import {
     getorganizations, editTodo,
 } from "../redux/actions";
+import { getAllUser } from '../redux/actions/adminAction'
 import { getAllOrganization } from "../redux/actions/organizationAction";
-import { createUser, deleteUser, getAllUser } from "../redux/actions/authAdminAction";
+import { createUser, deleteUser } from "../redux/actions/authAdminAction";
 
 const CreateUser = () => {
 
@@ -15,13 +16,17 @@ const CreateUser = () => {
         list: []
     })
     const dispatch = useDispatch();
-    const userss = useSelector((state) => state?.adminReducer?.users);
+    const users = useSelector((state) => state?.adminReducer?.users);
     const organizations = useSelector((state) => state?.organizationReducer?.organization);
     const [selectedTodo, setSelectedTodo] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [rowPerPAge, setRowPerPage] = useState(5);
     const [search, setSearch] = useState();
     const pageNumbers = [];
+
+    console.log("users", users);
+    // console.log("Organization:", organizations);
+
 
     let todoLength;
     if (organizations.length) {
@@ -170,9 +175,6 @@ const CreateUser = () => {
         <div className="container bg-light  my-4 py-1 border rounded">
             <h3 className="text-center">User List</h3>
             <div className="row">
-                <div className="col-3  col-xm-12 ">
-                    <input className="form-control mb-2 mr-sm-3" onChange={handleChange} value={state.query} type="search" placeholder=" Search by Name :" />
-                </div>
                 <div className=" col-3  float-right">
                     <select className="form-select" onChange={(e) => handlePageSize(e)} >
                         <option >Select No. Of Item</option>
@@ -181,21 +183,25 @@ const CreateUser = () => {
                         <option value="15">15</option>
                     </select>
                 </div>
+                <div className="col-3  col-xm-12 ">
+                    <input className="form-control mb-2 mr-sm-3" onChange={handleChange} value={state.query} type="search" placeholder=" Search by Name :" />
+                </div>
+
             </div>
             <table class=" table table-hover  table-bordered ">
                 <thead>
                     <tr>
                         <th scope="col">Name</th>
                         <th scope="col">Organization</th>
-                        <th scope="col">Admin</th>
+                        <th scope="col">Email</th>
                         <th scope="col">Delete</th>
                     </tr>
                 </thead>
-                {userss?.map((user) =>
+                {users && users?.userList?.map((user) =>
                     <tbody>
                         <tr>
-                            <th scope="row">{user.username}</th>
-                            <th scope="row">{user.name}</th>
+                            <td >{user.username}</td>
+                            <td >{user.name}</td>
                             <td>{user.email}</td>
                             <td>
                                 <button className="btn btn-danger btn-sm ml-1 tooltips"

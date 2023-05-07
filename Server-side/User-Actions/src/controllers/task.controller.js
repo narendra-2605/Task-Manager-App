@@ -90,6 +90,20 @@ const deleteTask = async (req, res) => {
     // }
 }
 
+const updateStatus = async (req, res) => {
+    try {
+        const task = await Tasks.findByIdAndUpdate(req.params.id, {
+            status: 'completed',
+        })
+        console.log("task is ", task);
+        res.status(200).json({ message: "Status Updated Successfully" });
+        await task.save();
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ message: "Interbal Server Error" });
+    }
+}
+
 module.exports = {
-    createTask, getAllTaskByUserId, updateTask, deleteTask
+    createTask, getAllTaskByUserId, updateTask, deleteTask, updateStatus
 }
