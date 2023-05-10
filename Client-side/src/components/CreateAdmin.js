@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { createAdmin, getAllAdmin, deleteAdmin } from "../redux/actions/authAdminAction";
-import { getAllOrganization } from "../redux/actions/organizationAction";
+import{getAllOrganization} from '../redux/actions/organizationAction';
 
 const CreateAdmin = () => {
     const [data, setData] = useState({});
@@ -12,16 +12,18 @@ const CreateAdmin = () => {
     })
     const dispatch = useDispatch();
     const organizations = useSelector((state) => state?.organizationReducer?.organization);
-    const admins = useSelector((state) => state?.adminReducer?.admin)
+    const organizationList = organizations.organizationList
+    const adminList = useSelector((state) => state?.adminReducer?.admin);
+    const admins = adminList.adminList;
     const [selectedTodo, setSelectedTodo] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [rowPerPAge, setRowPerPage] = useState(5);
     const [search, setSearch] = useState();
     const pageNumbers = [];
 
-    let organizationLength;
-    if (organizations.length) {
-        organizationLength = organizations.length;
+    let adminsLength;
+    if (admins?.length) {
+        adminsLength = admins?.length;
     }
     // console.log('organization length', organizationLength);
 
@@ -36,14 +38,14 @@ const CreateAdmin = () => {
     }
     //  **************** Pagination Logic *******************
 
-    for (let i = 1; i <= Math.ceil(organizationLength / rowPerPAge); i++) {
+    for (let i = 1; i <= Math.ceil(adminsLength / rowPerPAge); i++) {
         pageNumbers.push(i);
     }
 
     const indexOfLastRowOfCurrentPage = currentPage * rowPerPAge;
     const indexOfFirstRowOfCurrentPage = indexOfLastRowOfCurrentPage - rowPerPAge;
 
-    const currentRows = organizations.slice(indexOfFirstRowOfCurrentPage, indexOfLastRowOfCurrentPage);
+    const currentRows = admins?.slice(indexOfFirstRowOfCurrentPage, indexOfLastRowOfCurrentPage);
 
     const paginate = (pageNumber) => {
         setCurrentPage(pageNumber);
@@ -59,7 +61,7 @@ const CreateAdmin = () => {
     }
 
     const handleNext = () => {
-        if (currentPage !== Math.ceil(organizations.length / rowPerPAge))
+        if (currentPage !== Math.ceil(admins?.length / rowPerPAge))
             setCurrentPage(currentPage + 1);
     }
 
@@ -72,7 +74,7 @@ const CreateAdmin = () => {
     const changeEvent = (e) => {
         setData({
             ...data, [e.target.name]: e.target.value,
-        });     
+        });
     }
 
     /**
@@ -81,9 +83,9 @@ const CreateAdmin = () => {
 
 
     const handleChange = (e) => {
-        const results = organizations.filter(post => {
-            if (e.target.value === "") return organizations
-            return post.title.toLowerCase().includes(e.target.value.toLowerCase())
+        const results = admins?.filter(admin => {
+            if (e.target.value === "") return admins
+            return admin?.name?.toLowerCase().includes(e.target.value?.toLowerCase())
         })
         setstate({
             query: e.target.value,
@@ -151,8 +153,8 @@ const CreateAdmin = () => {
                         <label className="sr-only">Select Organization</label>
                         <select className="form-select  mb-2 mr-sm-3" aria-label="Default select example" name="orgId" onChange={(e) => changeEvent(e)} >
                             <option>Select Organization</option>
-                            {organizations.map((organization) =>
-                                <option value={organization._id}>{organization.name}</option>
+                            {organizationList?.map((organization,index) =>
+                                <option key={index} value={organization._id}>{organization.name}</option>
                             )} </select>
                     </div>
 
@@ -180,7 +182,7 @@ const CreateAdmin = () => {
                     </select>
                 </div>
             </div>
-            <table class=" table table-hover  table-bordered ">
+            <table className=" table table-hover  table-bordered ">
                 <thead>
                     <tr>
                         <th scope="col">Username</th>
@@ -189,20 +191,48 @@ const CreateAdmin = () => {
                         <th scope="col">Delete</th>
                     </tr>
                 </thead>
-                {admins.map((admin) =>
-                    <tbody>
-                        <tr>
-                            <th scope="row">{admin.username}</th>
-                            <th scope="row">{admin.name}</th>
-                            <td>{admin.email}</td>
-                            <td>  <button className="btn btn-danger btn-sm ml-1 tooltips"
-                                onClick={() => deleteAction(admin._id)} >
-                                <i className="fa-solid fa-trash-can"></i>
-                                {/* <span className="tooltiptext">Delete Todo</span> */}
-                            </button></td>
-                        </tr>
-                    </tbody>
-                )}
+                {/* {admins.map((admin) => */}
+                {
+                    state.query === ''
+                        ?
+                        <tbody>
+                            {
+                                currentRows?.map((admin, index) => (
+                                    <tr key={index}>
+                                        <td >{admin.username}</td>
+                                        <td >{admin.name}</td>
+                                        <td>{admin.email}</td>
+                                        <td>  <button className="btn btn-danger btn-sm ml-1 tooltips"
+                                            onClick={() => deleteAction(admin._id)} >
+                                            <i className="fa-solid fa-trash-can"></i>
+                                            {/* <span className="tooltiptext">Delete Todo</span> */}
+                                        </button></td>
+                                    </tr>
+                                ))
+                            }
+                        </tbody>
+                        :
+                        !state?.list.length ? "Your query did not return any results" : state?.list.map((admin, index) => {
+                            return (
+                                <tbody>
+                                    {
+                                        <tr key={index}>
+                                            <td scope="row">{admin.username}</td>
+                                            <td scope="row">{admin.name}</td>
+                                            <td>{admin.email}</td>
+                                            <td>
+                                                <button className="btn btn-danger btn-sm ml-1 tooltips"
+                                                    onClick={() => deleteAction(admin._id)} >
+                                                    <i className="fa-solid fa-trash-can"></i>
+                                                    {/* <span className="tooltiptext">Delete Todo</span> */}
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            )
+                        })
+                }
             </table>
         </div>
         <div className="container">
@@ -212,11 +242,11 @@ const CreateAdmin = () => {
                 </div>
                 <div className="col col-xm-12">
                     <ul className="text-center">
-                        {pageNumbers.map((number) => {
+                        {pageNumbers?.map((number) => {
                             let btnClass = " btn btn-outline-secondary mx-1";
                             if (number === currentPage) btnClass = "btn btn-secondary mx-1";
                             return (
-                                <button
+                                <button 
                                     className={btnClass}
                                     onClick={() => paginate(number)}
                                 >

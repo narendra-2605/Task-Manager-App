@@ -1,8 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import {
-    editTodo,
-} from "../redux/actions";
 import { getAllOrganization, createOrganization, deleteOrganization } from "../redux/actions/organizationAction";
 
 const CreateOrganization = () => {
@@ -14,15 +11,16 @@ const CreateOrganization = () => {
     })
     const dispatch = useDispatch();
     const organizations = useSelector((state) => state?.organizationReducer?.organization);
-    const [selectedTodo, setSelectedTodo] = useState([]);
+    console.log("Orgaization is:", organizations);
+    // const [selectedTodo, setSelectedTodo] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [rowPerPAge, setRowPerPage] = useState(5);
     const [search, setSearch] = useState();
     const pageNumbers = [];
 
-    let todoLength;
+    let organizationLength;
     if (organizations.length) {
-        todoLength = organizations.length;
+        organizationLength = organizations.length;
     }
 
     useEffect(() => {
@@ -31,7 +29,7 @@ const CreateOrganization = () => {
 
     //  **************** Pagination Logic *******************
 
-    for (let i = 1; i <= Math.ceil(todoLength / rowPerPAge); i++) {
+    for (let i = 1; i <= Math.ceil(organizationLength / rowPerPAge); i++) {
         pageNumbers.push(i);
     }
 
@@ -81,9 +79,9 @@ const CreateOrganization = () => {
 
 
     const handleChange = (e) => {
-        const results = organizations.filter(post => {
+        const results = organizations.filter(organization => {
             if (e.target.value === "") return organizations
-            return post.title.toLowerCase().includes(e.target.value.toLowerCase())
+            return organization.name.toLowerCase().includes(e.target.value.toLowerCase())
         })
         setstate({
             query: e.target.value,
@@ -168,18 +166,42 @@ const CreateOrganization = () => {
                     </tr>
                 </thead>
                 {
-                    organizations.map((organization) => <tbody>
-                        <tr>
-                            <td >{organization.name}</td>
-                            <td>{organization.email}</td>
-                            <td>{organization.details}</td>
-                            <td>  <button className="btn btn-danger btn-sm ml-1 tooltips"
-                                onClick={() => deleteAction(organization._id)} >
-                                <i className="fa-solid fa-trash-can"></i>
-                            </button></td>
-                        </tr>
-                    </tbody>
-                    )}
+                    state.query === ''
+                        ?
+                        <tbody>
+                            {
+                                currentRows?.map((organization, index) => (
+                                    <tr key={index}>
+                                        <td >{organization.name}</td>
+                                        <td>{organization.email}</td>
+                                        <td>{organization.details}</td>
+                                        <td>  <button className="btn btn-danger btn-sm ml-1 tooltips"
+                                            onClick={() => deleteAction(organization._id)} >
+                                            <i className="fa-solid fa-trash-can"></i>
+                                        </button></td>
+                                    </tr>
+                                )
+                                )}
+                        </tbody>
+                        :
+                        !state.list.length ? "Your query did not return any results" : state?.list.map((organization, index) => {
+                            return (
+                                <tbody>
+                                    {
+                                        <tr key={index}>
+                                            <td >{organization.name}</td>
+                                            <td>{organization.email}</td>
+                                            <td>{organization.details}</td>
+                                            <td>  <button className="btn btn-danger btn-sm ml-1 tooltips"
+                                                onClick={() => deleteAction(organization._id)} >
+                                                <i className="fa-solid fa-trash-can"></i>
+                                            </button></td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            )
+                        })
+                }
             </table>
         </div>
         <div className="container">
@@ -189,18 +211,18 @@ const CreateOrganization = () => {
                 </div>
                 <div className="col col-xm-12">
                     <ul className="text-center">
-                        {pageNumbers.map((number) => {
-                            let btnClass = " btn btn-outline-secondary mx-1";
-                            if (number === currentPage) btnClass = "btn btn-secondary mx-1";
-                            return (
-                                <button
-                                    className={btnClass}
-                                    onClick={() => paginate(number)}
-                                >
-                                    {number}
-                                </button>
-                            );
-                        })}
+                        {
+                            pageNumbers.map((number) => {
+                                let btnClass = " btn btn-outline-secondary mx-1";
+                                if (number === currentPage) btnClass = "btn btn-secondary mx-1";
+                                return (
+                                    <button className={btnClass}
+                                        onClick={() => paginate(number)} >
+                                        {number}
+                                    </button>
+                                );
+                            })
+                        }
                     </ul>
                 </div>
                 <div className="col col-xm-12 text-end">

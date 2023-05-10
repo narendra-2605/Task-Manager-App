@@ -1,4 +1,5 @@
 const Users = require('../models/user.model');
+const Organizations = require('../models/organization.model');
 const bcrypt = require("bcryptjs");
 
 const createAdmin = async (req, res) => {
@@ -25,28 +26,6 @@ const createAdmin = async (req, res) => {
         })
         res.status(200).json({ message: "Admin is Successfully Registered:", user });
         await user.save();
-        // }
-        // else if (req.user.role === 'admin') {
-        //     console.log("password is:", req.body.password);
-        //     const salt = await bcrypt.genSalt();
-        //     console.log("Slat is:", salt);
-        //     const hashedPassword = await bcrypt.hash(req.body.password, salt);
-        //     console.log("Hashed password", hashedPassword);
-        //     const user = new Users({
-        //         username: req.body.username,
-        //         name: req.body.name,
-        //         email: req.body.email.toLowerCase(),
-        //         password: hashedPassword,
-        //         salt: salt,
-        //         role: 'user',
-        //         orgId: req.body.orgId,
-        //         reportingTo: req.user._id,
-        //         createdBy: req.user._id,
-        //         updatedBy: req.user._id
-        //     })
-        //     res.status(200).json({ message: "User is Successfully Registered:", user });
-        //     await user.save();
-        // }
         console.log("session User is:", req.user);
     }
     catch (err) {
@@ -75,8 +54,8 @@ const createUser = async (req, res) => {
             salt: salt,
             role: 'user',
             // orgId: req.body.orgId,
-            // reportingTo: req.user._id,
-            // createdBy: req.user._id,
+            reportingTo: req.user._id,
+            createdBy: req.user._id,
             // updatedBy: req.user._id
         })
         res.status(200).json({ message: "User is Successfully Registered:", user });
@@ -94,10 +73,9 @@ const createUser = async (req, res) => {
 }
 const getAdminList = async (req, res) => {
     try {
+        // console.log("loged in user from getAdminList:", req.session);
         const adminList = await Users.find({ role: 'admin' });
-        // console.log("Admin list", adminList);
-        res.send(adminList);
-        // res.status(201).json({ message: "Successful" });
+        res.status(201).json({ adminList});
     } catch (error) {
         console.log(error);
     }
@@ -181,9 +159,17 @@ const login = (passport) => {
             } else {
                 console.log("login:");
                 passport.authenticate("local", (err, user, info) => {
-                    if (err) throw err;
-                    if (!user) res.send("No User Exists");
+                    console.log("before error");
+                    // if (err) throw err;
+                    if(err){
+                        res.status(500).json({message:"Password Mismatched:"});
+                    }
+                    console.log(err);
+                    console.log("after err");
+                    console.log("user",user);
+                    if (!user) res.status(500).json({message:"No User Exists"});
                     else {
+                        
                         req.logIn(user, err => {
                             if (err) throw err;
                             const sess = req.session;

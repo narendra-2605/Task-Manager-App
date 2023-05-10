@@ -34,7 +34,6 @@ const createTask = async (req, res) => {
             await task.save();
             res.status(200).json({ message: "Task Posted Successfully", task });
         }
-
     }
     catch (err) {
         console.log(err);
@@ -48,6 +47,8 @@ const createTask = async (req, res) => {
 const getAllTaskByUserId = async (req, res) => {
     // if (req.session.passport) {
     try {
+        // console.log("user from getAllTaskByUserId:", req.session);
+        // console.log("user from getAllTaskByUserId:", req.session.passport);
         console.log("user from getAllTaskByUserId:", req.session.passport.user);
         const tasks = await Tasks.find({ createdBy: req.session.passport.user });
         res.status(200).json({ tasks });

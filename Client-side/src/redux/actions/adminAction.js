@@ -1,5 +1,5 @@
 import {
-    GET_ALL_USER, DELETE_USER, ADD_TODO_ADMIN, GET_ADMIN_TODO, DELETE_ADMIN_TODO, UPDATE_ADMIN_TODO, EDIT_ADMIN_TODO,MARK_ADMIN_TODO_COMPLETED
+    GET_ALL_USER, DELETE_USER, ADD_TODO_ADMIN, GET_ADMIN_TODO, DELETE_ADMIN_TODO, UPDATE_ADMIN_TODO, EDIT_ADMIN_TODO, MARK_ADMIN_TODO_COMPLETED
 } from './actionTypes';
 import axios from "axios";
 
@@ -36,6 +36,7 @@ export const addTodo = (todo) => (dispatch) => {
 export const getAllUser = () => async (dispatch) => {
     try {
         const response = await axios.get(localhostAuth + 'getUserList', { withCredentials: true });
+        console.log("response from get all user", response)
         dispatch({
             type: GET_ALL_USER,
             payload: response.data

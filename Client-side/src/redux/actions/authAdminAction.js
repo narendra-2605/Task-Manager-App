@@ -39,7 +39,7 @@ export const createAdmin = (data) => async (dispatch) => {
 export const deleteAdmin = (adminId) => async (dispatch) => {
     try {
         console.log("adminId from deleteAdmin", adminId);
-        const response = axios.delete(localhostAuth + `deleteAdmin/${adminId}`);
+        const response = axios.delete(localhostAuth + `deleteUsers/${adminId}`);
         console.log("response is from delete admin action", response);
         dispatch({
             type: DELETE_ADMIN,

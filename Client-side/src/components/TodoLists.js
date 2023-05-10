@@ -18,13 +18,13 @@ const TodoLists = () => {
   const todos = useSelector((state) => state?.todoReducer?.todos);
   const [selectedTodo, setSelectedTodo] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [rowPerPAge, setRowPerPage] = useState(5);
+  const [rowPerPage, setRowPerPage] = useState(5);
   const [search, setSearch] = useState();
   const pageNumbers = [];
 
   let todoLength;
-  if (todos.length) {
-    todoLength = todos.length;
+  if (todos?.tasks?.length) {
+    todoLength = todos?.tasks?.length;
   }
 
   useEffect(() => {
@@ -33,12 +33,12 @@ const TodoLists = () => {
 
   //  **************** Pagination Logic *******************
 
-  for (let i = 1; i <= Math.ceil(todoLength / rowPerPAge); i++) {
+  for (let i = 1; i <= Math.ceil(todoLength / rowPerPage); i++) {
     pageNumbers.push(i);
   }
-
-  const indexOfLastRowOfCurrentPage = currentPage * rowPerPAge;
-  const indexOfFirstRowOfCurrentPage = indexOfLastRowOfCurrentPage - rowPerPAge;
+  
+  const indexOfLastRowOfCurrentPage = currentPage * rowPerPage;
+  const indexOfFirstRowOfCurrentPage = indexOfLastRowOfCurrentPage - rowPerPage;
 
   const currentRows = todos?.tasks?.slice(indexOfFirstRowOfCurrentPage, indexOfLastRowOfCurrentPage);
 
@@ -56,7 +56,7 @@ const TodoLists = () => {
   }
 
   const handleNext = () => {
-    if (currentPage !== Math.ceil(todos.length / rowPerPAge))
+    if (currentPage !== Math.ceil(todos.length / rowPerPage))
       setCurrentPage(currentPage + 1);
   }
 
@@ -156,7 +156,7 @@ const TodoLists = () => {
             <th width="20%">Action</th>
           </tr>
 
-          
+
         </thead>
         {
           state.query === ''
@@ -170,16 +170,14 @@ const TodoLists = () => {
                         value={todo?._id} onChange={(e) => changeEvent(e, todo._id)}
                         name={`todo_${index}`} />
                     </td>
-                    <td>{todo?.title}{todo?._id}  </td>
-                    <td>{todo?.description} {todo?._id}</td>
+                    <td>{todo?.title} </td>
+                    <td>{todo?.description}</td>
                     <td>
-                      {todo?.isCompleted ? (
-                        <span className="badge badge-success p-2">Completed</span>
-                      ) : todo?.isPending ? (
-                        <span className="badge badge-danger p-2">Pending</span>
-                      ) : (
-                        ""
-                      )}
+                      {todo?.status === 'completed' ? (
+                        <span className="badge text-bg-success p-2">Completed</span>
+                      ) : todo?.status === 'pending' ? (
+                        <span className="badge text-bg-danger p-2">Pending</span>
+                      ) : ''}
                     </td>
                     <td>
                       {todo?.role ? null : <>
@@ -217,13 +215,11 @@ const TodoLists = () => {
                       <td>{post.title}  </td>
                       <td>{post.description}</td>
                       <td>
-                        {post.isCompleted ? (
-                          <span className="badge badge-success p-2">Completed</span>
-                        ) : post?.isPending ? (
-                          <span className="badge badge-danger p-2">Pending</span>
-                        ) : (
-                          ""
-                        )}
+                        {post?.status === 'completed' ? (
+                          <span className="badge text-bg-success p-2">Completed</span>
+                        ) : post?.status === 'pending' ? (
+                          <span className="badge text-bg-danger p-2">Pending</span>
+                        ) : ''}
                       </td>
                       <td>
                         <button
@@ -247,31 +243,30 @@ const TodoLists = () => {
         }
       </table>
 
-      <div className=" row ">
-        <div className="col-3 col-xm-12 text-start">
-          <button className="btn btn-secondary align-self-start" onClick={() => handlePrevious()} > Previous </button>
+      <div className="row pb-4" style={{ height: "60px" }}>
+        <div className="col col-xm-12 text-start">
+          <button className="btn btn-secondary align-self-start" onClick={() => handlePrevious()} > Previous 12</button>
         </div>
-        <div className="col-6 col-xm-12">
+        <div className="col col-xm-12">
           <ul className="text-center">
-            {pageNumbers.map((number) => {
-              let btnClass = " btn btn-outline-secondary mx-1";
-              if (number === currentPage) btnClass = "btn btn-secondary mx-1";
-              return (
-                <button
-                  className={btnClass}
-                  onClick={() => paginate(number)}
-                >
-                  {number}
-                </button>
-              );
-            })}
+            {
+              pageNumbers?.map((number) => {
+                let btnClass = " btn btn-outline-secondary mx-1";
+                if (number === currentPage) btnClass = "btn btn-secondary mx-1";
+                return (
+                  <button className={btnClass}
+                    onClick={() => paginate(number)} >
+                    {number} 
+                  </button>
+                );
+              })
+            }
           </ul>
         </div>
-        <div className="col-3 col-xm-12 text-end">
-          <button className="btn btn-secondary ml-2 align-self-" onClick={() => handleNext()}  >   Next </button>
+        <div className="col col-xm-12 text-end">
+          <button className="btn btn-secondary ml-2 align-self-" onClick={() => handleNext()} > Next </button>
         </div>
       </div>
-
     </div>
     {/* <ToastContainer /> */}
   </>

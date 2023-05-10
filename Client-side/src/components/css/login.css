@@ -78,9 +78,9 @@ button {
 .login-form > button:hover::before, .register-form > button:hover::before {
   width: 100%;
 }
-.login-card span, .register-card span{
+/* .login-card span, .register-card span{
   position: absolute;
-  top: 57%;
+  top: 59%;
   right: 3rem;
   cursor: pointer;
   padding: 5px;
@@ -93,7 +93,7 @@ button {
   border-radius: 10px;
   padding-left: 10px;
   padding-right: 10px;
-}
+} */
 .login-card, .register-card{
   position: relative;
 }
@@ -186,7 +186,7 @@ button {
 }
 .login-card span, .register-card span{
   position: absolute;
-  top: 57%;
+  top: 62%;
   right: 3rem;
   cursor: pointer;
   padding: 5px;

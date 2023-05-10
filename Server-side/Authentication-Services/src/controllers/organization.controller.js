@@ -32,12 +32,13 @@ const createOrganization = async (req, res) => {
 
 const getOrganizationList = async (req, res) => {
     // if (req.session.passport) {
-    // console.log("session from organization list:",req.session);
+
     try {
+        // console.log("session from organization list:", req.session);
         // console.log("entered route");
         const organizationList = await Organizations.find()
-        res.send(organizationList);
-        // res.status(201).json({ message: "Successful" });
+        // res.send(organizationList);
+        res.status(201).json({ message: "Successful", organizationList });
     }
     catch (error) {
         console.log(error);

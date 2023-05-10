@@ -11,8 +11,8 @@ const localhostAuth = process.env.REACT_APP_authenticationService;
 export const login = (data) => async (dispatch) => {
     try {
         const response = await axios.post(localhostAuth + 'login', data);
-        console.log("responseis :", response)
-        localStorage.setItem("user", JSON.stringify(response));
+        console.log("response is from login :", response)
+        localStorage.setItem("user", JSON.stringify(response));  
         const role = response.data.user.role;
         if (response) {
             toast.success('Logged in Successfully', { autoClose: 1500 });

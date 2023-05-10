@@ -10,17 +10,20 @@ module.exports = function (passport) {
         async (email, password, done) => {
             // look for the user data
             const user = await Users.findOne({ email: email })
+            console.log("user from passport:", user);
             if (!user) { return done(null, false, { message: 'User not found.' }); }
             // const passwordd = await bcrypt.compare(password, user.password)
             // if (user.password !== passwordd) {
             if (await bcrypt.compare(password, user.password)) {
-                return done(null, user);
+                return done(null, user, { message: 'Authentication Successful' });
             }
             // if the user is properly not authenticated
             // return done(null, user);
-            return done(null, false, {
+            console.log("after compare");
+            return done({
                 message: 'Invalid password.'
-            });
+            },false 
+            );
         }
     ));
     // store cookie inside the browser

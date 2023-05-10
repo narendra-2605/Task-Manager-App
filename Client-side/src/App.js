@@ -16,7 +16,8 @@ import CreateUser from './components/CreateUser';
 import LogoutPrivateRoute from './Routes/LogoutPrivateRoute';
 import AdminPrivateRoutes from "./Routes/AdminPrivateRoute";
 import PreventLoginPagePrivate from "./Routes/PriventLoginPagePrivate";
-import PreventAfterLogin from './Routes/PreventAfterLogin';
+import AfterLogin from './Routes/AfterLogin';
+import UserPrivateRoutes from './Routes/UserPrivateRoute';
 import SuperAdminPrivateRoutes from "./Routes/SuperAdminPrivateRoute";
 
 function App() {
@@ -36,18 +37,29 @@ function App() {
           <Route path="/" element={<Login setLogin={setLogin} />} />
           <Route index element={<Login setLogin={setLogin} />} />
           <Route path="/" element={< Login />} />
-          <Route path="/signUp" element={<SignUp />} />
         </Route>
 
-        <Route element={<PreventAfterLogin />}>
+        <Route element={<AfterLogin />}>
           <Route path="/nav" element={<Navbar />} exact />
-          <Route path="/addTodo" element={<AddTodo />} exact />
-          <Route path="/userTodo" element={<UserTodo />} exact />
+        </Route>
+
+        <Route element={<AdminPrivateRoutes />}>
+          <Route path="/nav" element={<Navbar />} exact />
           <Route path="/adminTodo" element={<AdminTodo />} exact />
-          <Route path="/todoList" element={<TodoLists />} exact />
           <Route path="/createUser" element={<CreateUser />} />
-          <Route path="/createAdmin" element={<CreateAdmin />} />
-          <Route path="/createOrganization" element={<CreateOrganization />} />
+        </Route>
+
+        <Route element={<SuperAdminPrivateRoutes />}>
+          <Route path="/nav" element={<Navbar />} exact />
+          <Route path="/createAdmin" element={<CreateAdmin />} exact />
+          <Route path="/createOrganization" element={<CreateOrganization />} exact />
+        </Route>
+
+        <Route element={<UserPrivateRoutes />}>
+          <Route path="/userTodo" element={<UserTodo />} exact />
+
+          {/* <Route path="/addTodo" element={<AddTodo />} exact />
+          <Route path="/todoList" element={<TodoLists />} exact /> */}
         </Route>
 
       </Routes>

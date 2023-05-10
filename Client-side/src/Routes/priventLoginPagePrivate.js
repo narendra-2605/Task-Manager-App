@@ -20,8 +20,6 @@ const PreventLoginPagePrivate = () => {
             {
                 flag === 0 ? <Navigate to="/userTodo" /> : flag === 1 ? <Navigate to="/adminTodo" /> : flag === 2 ? <Navigate to="/createAdmin" /> : <Outlet />
             }
-            {/* flag ? <Outlet /> : <Navigate to="/" /> */}
-            {/* {flag === 3 ? <Outlet /> : flag === 1 ? <Navigate to="/adminTodo" /> : <Navigate to="/userTodo" />} */}
         </>
     )
 }
