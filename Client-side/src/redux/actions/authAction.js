@@ -10,19 +10,17 @@ const localhostAuth = process.env.REACT_APP_authenticationService;
 export const login = (data) => async (dispatch) => {
     try {
         const response = await axios.post(localhostAuth + 'login', data);
-        console.log("response is from login :", response);
         if (response.data.PaswordMessage) {
             const error = response.data.PaswordMessage;
             toast.error(response.data.PaswordMessage, { autoClose: 1500 });
             return error;
         }
         else if (response.data.UserExistMessage) {
-            console.log(response.data.UserExistMessage);
+            // console.log(response.data.UserExistMessage);
             const error = response.data.UserExistMessage;
             toast.error(response.data.UserExistMessage, { autoClose: 1500 });
             return error;
         }
-        // else {
             localStorage.setItem("user", JSON.stringify(response));
             const role = response.data.user.role;
             if (response) {
@@ -35,7 +33,6 @@ export const login = (data) => async (dispatch) => {
                 payload: response
             });
             return role;
-        // }
     }
     catch (error) {
         toast.error(error?.response?.data?.message)
@@ -58,7 +55,6 @@ export const logOut = () => async (dispatch) => {
 export const signUp = (data) => (dispatch) => {
     try {
         const response = axios.post('http://localhost:3002/userRegister', data);
-        console.log("Sign Up response:", response);
         if (response) {
             toast.success('Signed in Successfully', { autoClose: 1500 });
         }

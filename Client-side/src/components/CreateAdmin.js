@@ -26,15 +26,16 @@ const CreateAdmin = () => {
     if (admins?.length) {
         adminsLength = admins?.length;
     }
-    // console.log('organization length', organizationLength);
 
     useEffect(() => {
         dispatch(getAllAdmin());
         dispatch(getAllOrganization());
     }, [])
-
+    /**
+     * 
+     * @param {Admin Id Used To Delete the Admin} adminId 
+     */
     const deleteAction = (adminId) => {
-        console.log("adminId from create admin", adminId);
         dispatch(deleteAdmin(adminId));
     }
     //  **************** Pagination Logic *******************
@@ -67,11 +68,6 @@ const CreateAdmin = () => {
     }
 
     // *******************************************
-
-    /**
-     * actionClick Function
-     * @param {organization list and Action type ->  Edit or Delete organization in JSON form} data
-     */
     const changeEvent = (e) => {
         setData({
             ...data, [e.target.name]: e.target.value,
@@ -79,11 +75,11 @@ const CreateAdmin = () => {
     }
 
     /**
-     * function to mark the perticular organization as completed
+     * 
+     * @param {Event} e
+     * To serach the perticular Admin 
      */
-
     const handleChange = (e) => {
-        
         const results = admins?.filter(admin => {
             if (e.target.value === "") return admins
             return admin?.name?.toLowerCase().includes(e.target.value?.toLowerCase())
@@ -93,10 +89,14 @@ const CreateAdmin = () => {
             list: results
         })
     }
-
+    /**
+        * 
+        * @param {Event} e
+        * Post call for submitting form to create admin 
+        */
     const onSubmit = (e) => {
         e.preventDefault();
-        console.log("Data from create Admin", data)
+        // console.log("Data from create Admin", data)
         dispatch(createAdmin(data));
     }
     return (<>
@@ -207,7 +207,6 @@ const CreateAdmin = () => {
                                         <td>  <button className="btn btn-danger btn-sm ml-1 tooltips"
                                             onClick={() => deleteAction(admin._id)} >
                                             <i className="fa-solid fa-trash-can"></i>
-                                            {/* <span className="tooltiptext">Delete Todo</span> */}
                                         </button></td>
                                     </tr>
                                 ))
@@ -226,7 +225,6 @@ const CreateAdmin = () => {
                                                 <button className="btn btn-danger btn-sm ml-1 tooltips"
                                                     onClick={() => deleteAction(admin._id)} >
                                                     <i className="fa-solid fa-trash-can"></i>
-                                                    {/* <span className="tooltiptext">Delete Todo</span> */}
                                                 </button>
                                             </td>
                                         </tr>

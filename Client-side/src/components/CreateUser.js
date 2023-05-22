@@ -17,21 +17,15 @@ const CreateUser = () => {
     })
     const dispatch = useDispatch();
     const users = useSelector((state) => state?.adminReducer?.users);
-    const organizations = useSelector((state) => state?.organizationReducer?.organization);
-    console.log("organitation ", organizations);
     const [selectedTodo, setSelectedTodo] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [rowPerPAge, setRowPerPage] = useState(5);
     const [search, setSearch] = useState();
     const pageNumbers = [];
 
-    console.log("users", users);
-    // console.log("Organization:", organizations);
-
-
-    let todoLength;
-    if (organizations?.organizationList?.length) {
-        todoLength = organizations?.organizationList?.length;
+    let usersLength;
+    if (users?.userList?.length) {
+        usersLength = users?.userList?.length;
     }
 
     useEffect(() => {
@@ -40,20 +34,19 @@ const CreateUser = () => {
     }, [])
 
     const deleteAction = (userId) => {
-        console.log("user Id from create user", userId);
         dispatch(deleteUser(userId));
     }
 
     //  **************** Pagination Logic *******************
 
-    for (let i = 1; i <= Math.ceil(todoLength / rowPerPAge); i++) {
+    for (let i = 1; i <= Math.ceil(usersLength / rowPerPAge); i++) {
         pageNumbers.push(i);
     }
 
     const indexOfLastRowOfCurrentPage = currentPage * rowPerPAge;
     const indexOfFirstRowOfCurrentPage = indexOfLastRowOfCurrentPage - rowPerPAge;
 
-    const currentRows = organizations?.organizationList?.slice(indexOfFirstRowOfCurrentPage, indexOfLastRowOfCurrentPage);
+    const currentRows = users?.userList?.slice(indexOfFirstRowOfCurrentPage, indexOfLastRowOfCurrentPage);
 
     const paginate = (pageNumber) => {
         setCurrentPage(pageNumber);
@@ -69,52 +62,32 @@ const CreateUser = () => {
     }
 
     const handleNext = () => {
-        if (currentPage !== Math.ceil(organizations.length / rowPerPAge))
+        if (currentPage !== Math.ceil(users?.userList?.length / rowPerPAge))
             setCurrentPage(currentPage + 1);
     }
 
     // *******************************************
 
-    /**
-     * actionClick Function
-     * @param {Todo list and Action type ->  Edit or Delete todo in JSON form} data
-     */
-    const actionClick = (data) => {
-        if (data && data?.type === "edit") {
-            const idd = data.todo._id;
-            dispatch(editTodo(idd));
-        } else if (data && data?.type === "delete") {
-            const id = data.todo._id;
-            console.log("todo id from todoList action click", id)
-        }
-    };
-
     const changeEvent = (e, id) => {
         setValue({ ...value, [e.target.name]: e.target.value });
     }
 
-    /**
-     * function to mark the perticular todo as completed
-     */
-
-
     const handleChange = (e) => {
-
-        const results = organizations?.organizationList?.filter(post => {
-            if (e.target.value === "") return organizations?.organizationList
+        const results = users?.userList?.filter(post => {
+            if (e.target.value === "") return users?.userList
             return post?.name?.toLowerCase()?.includes(e.target.value?.toLowerCase())
         })
-        
         setstate({
             query: e.target.value,
             list: results
         })
     }
+
     const onSubmit = (e) => {
         e.preventDefault();
-        console.log("Value from create user", value);
         dispatch(createUser(value));
     }
+
     return (<>
         <div className="container bg-light  my-4 py-1 border rounded">
             <form className="mt-3 mb-2 " id="createUserForm" onSubmit={onSubmit}>
@@ -178,6 +151,11 @@ const CreateUser = () => {
         <div className="container bg-light  my-4 py-1 border rounded">
             <h3 className="text-center">User List</h3>
             <div className="row">
+
+                <div className="col-3  col-xm-12 ">
+                    <input className="form-control mb-2 mr-sm-3" onChange={handleChange} value={state.query} type="search" placeholder=" Search by Name :" />
+                </div>
+
                 <div className=" col-3  float-right">
                     <select className="form-select" onChange={(e) => handlePageSize(e)} >
                         <option >Select No. Of Item</option>
@@ -186,12 +164,10 @@ const CreateUser = () => {
                         <option value="15">15</option>
                     </select>
                 </div>
-                <div className="col-3  col-xm-12 ">
-                    <input className="form-control mb-2 mr-sm-3" onChange={handleChange} value={state.query} type="search" placeholder=" Search by Name :" />
-                </div>
 
             </div>
-            <table class=" table table-hover  table-bordered ">
+            <table className=" table table-hover  table-bordered ">
+
                 <thead>
                     <tr>
                         <th scope="col">UserName</th>
@@ -200,22 +176,46 @@ const CreateUser = () => {
                         <th scope="col">Delete</th>
                     </tr>
                 </thead>
-                {users && users?.userList?.map((user) =>
-                    <tbody>
-                        <tr>
-                            <td >{user.username}</td>
-                            <td >{user.name}</td>
-                            <td>{user.email}</td>
-                            <td>
-                                <button className="btn btn-danger btn-sm ml-1 tooltips"
-                                    onClick={() => deleteAction(user._id)} >
-                                    <i className="fa-solid fa-trash-can"></i>
-                                    {/* <span className="tooltiptext">Delete Todo</span> */}
-                                </button>
-                            </td>
-                        </tr>
-                    </tbody>
-                )}
+                {
+                    state.query === ''
+                        ?
+                        <tbody>
+                            {currentRows?.map((user) =>
+                                <tr>
+                                    <td >{user.username}</td>
+                                    <td >{user.name}</td>
+                                    <td>{user.email}</td>
+                                    <td>
+                                        <button className="btn btn-danger btn-sm ml-1 tooltips"
+                                            onClick={() => deleteAction(user._id)} >
+                                            <i className="fa-solid fa-trash-can"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                            )}
+                        </tbody>
+                        :
+                        !state.list.length ? "Your query did not return any results" :
+                            state?.list.map((user, index) => {
+                                return (
+                                    <tbody>
+                                        {
+                                            <tr key={index} >
+                                                <td >{user.username}</td>
+                                                <td >{user.name}</td>
+                                                <td>{user.email}</td>
+                                                <td>
+                                                    <button className="btn btn-danger btn-sm ml-1 tooltips"
+                                                        onClick={() => deleteAction(user._id)} >
+                                                        <i className="fa-solid fa-trash-can"></i>
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                )
+                            })
+                }
             </table>
         </div>
         <div className="container">
@@ -229,10 +229,7 @@ const CreateUser = () => {
                             let btnClass = " btn btn-outline-secondary mx-1";
                             if (number === currentPage) btnClass = "btn btn-secondary mx-1";
                             return (
-                                <button
-                                    className={btnClass}
-                                    onClick={() => paginate(number)}
-                                >
+                                <button className={btnClass} onClick={() => paginate(number)}   >
                                     {number}
                                 </button>
                             );

@@ -3,7 +3,6 @@ const Users = require('../models/user.model');
 const Organizations = require('../models/organization.model');
 
 const createTask = async (req, res) => {
-    // if (req.session.passport) {
     try {
         console.log("Ceate task functino is called:");
         const userId = req.session.passport.user;
@@ -39,16 +38,10 @@ const createTask = async (req, res) => {
         console.log(err);
         res.status(500).json({ message: "Internal Server Error" });
     }
-    // } else {
-    //     res.status(500).json({ message: "Please Login first:" });
-    // }
 }
 
 const getAllTaskByUserId = async (req, res) => {
-    // if (req.session.passport) {
     try {
-        // console.log("user from getAllTaskByUserId:", req.session);
-        // console.log("user from getAllTaskByUserId:", req.session.passport);
         console.log("user from getAllTaskByUserId:", req.session.passport.user);
         const tasks = await Tasks.find({ createdBy: req.session.passport.user });
         console.log("TAsks", tasks);
@@ -57,9 +50,6 @@ const getAllTaskByUserId = async (req, res) => {
     catch (err) {
         console.log(err);
     }
-    // } else {
-    //     res.status(500).json({ message: "Please Login first:" });
-    // }
 }
 
 const updateTask = async (req, res) => {
@@ -79,7 +69,6 @@ const updateTask = async (req, res) => {
 }
 
 const deleteTask = async (req, res) => {
-    // if (req.session.passport) {
     try {
         console.log("Delete Task by ID function is called:");
         await Tasks.findByIdAndDelete(req.params.id);
@@ -87,9 +76,6 @@ const deleteTask = async (req, res) => {
     } catch (error) {
         res.status(500).json({ message: "Internal Server Error" });
     }
-    // } else {
-    //     res.status(500).json({ message: "Please Login First:" });
-    // }
 }
 
 const updateStatus = async (req, res) => {

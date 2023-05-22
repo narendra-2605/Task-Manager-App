@@ -59,8 +59,8 @@ const CreateOrganization = () => {
     // *******************************************
 
     /**
-     * actionClick Function
-     * @param {Todo list and Action type ->  Edit or Delete todo in JSON form} data
+     * 
+     * @param {Organization Id to delte Organization} organizationId 
      */
     const deleteAction = (organizationId) => {
         dispatch(deleteOrganization(organizationId));
@@ -72,11 +72,6 @@ const CreateOrganization = () => {
         })
     }
 
-    /**
-     * function to mark the perticular todo as completed
-     */
-
-
     const handleChange = (e) => {
         const results = organizations?.organizationList?.filter(organization => {
             if (e.target.value === "") return organizations
@@ -87,12 +82,14 @@ const CreateOrganization = () => {
             list: results
         })
     }
+
     const onSubmit = (e) => {
         e.preventDefault();
         dispatch(createOrganization(value));
         setValue({ name: "", password: "" });
         document.getElementById("organizationForm").reset();
     }
+
     return (<>
         <div className="container bg-light  my-4 py-1 border rounded">
             <form className="mt-3 mb-2 " id="organizationForm" onSubmit={onSubmit}>
@@ -182,23 +179,24 @@ const CreateOrganization = () => {
                                 )}
                         </tbody>
                         :
-                        !state.list.length ? "Your query did not return any results" : state?.list.map((organization, index) => {
-                            return (
-                                <tbody>
-                                    {
-                                        <tr key={index}>
-                                            <td >{organization.name}</td>
-                                            <td>{organization.email}</td>
-                                            <td>{organization.details}</td>
-                                            <td>  <button className="btn btn-danger btn-sm ml-1 tooltips"
-                                                onClick={() => deleteAction(organization._id)} >
-                                                <i className="fa-solid fa-trash-can"></i>
-                                            </button></td>
-                                        </tr>
-                                    }
-                                </tbody>
-                            )
-                        })
+                        !state.list.length ? "Your query did not return any results" :
+                            state?.list.map((organization, index) => {
+                                return (
+                                    <tbody>
+                                        {
+                                            <tr key={index}>
+                                                <td >{organization.name}</td>
+                                                <td>{organization.email}</td>
+                                                <td>{organization.details}</td>
+                                                <td>  <button className="btn btn-danger btn-sm ml-1 tooltips"
+                                                    onClick={() => deleteAction(organization._id)} >
+                                                    <i className="fa-solid fa-trash-can"></i>
+                                                </button></td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                )
+                            })
                 }
             </table>
         </div >

@@ -41,10 +41,8 @@ const Login = (props) => {
             }));
             return;
         }
-        console.log("Data from login component:", data);
         dispatch(login(data)).then((res) => {
             if (res === 'superAdmin' || res === 'admin' || res === 'user') {
-                console.log("role is ", res);
                 props.setLogin(true);
                 { res === 'superAdmin' ? navigate("/createAdmin") : res === 'admin' ? navigate('adminTodo') : navigate('/userTodo') }
             }
@@ -82,7 +80,6 @@ const Login = (props) => {
                     <button type="submit">Login</button>
                 </form>
             </div>
-            {/* </div> */}
             <Outlet />
             <ToastContainer />
         </>

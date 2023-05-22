@@ -24,7 +24,6 @@ export const createOrganization = (data) => async (dispatch) => {
     try {
         console.log("data from org action:", data);
         const response = await axios.post(localhostAuth + 'createorganization', data);
-        console.log("response is from org action", response);
         dispatch({
             type: CREATE_ORGANIZATION,
             payload: response
@@ -38,7 +37,6 @@ export const deleteOrganization = (organizationId) => async (dispatch) => {
     try {
         console.log("task id from deleteOrganization", organizationId);
         const response = axios.delete(localhostAuth + `deleteOrganization/${organizationId}`);
-        console.log("response is from org action", response);
         dispatch({
             type: DELETE_ORGANIZATION,
             payload: response

@@ -86,10 +86,8 @@ const adminReducer = (state = initialState, action) => {
                 isEdit: false
             }
         case MARK_ADMIN_TODO_COMPLETED:
-            // const { selectedTodoId } = action.payload;
             return {
                 ...state,
-                // adminTodoList: [...adminTodoList]
             }
 
         default:

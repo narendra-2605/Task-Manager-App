@@ -36,6 +36,11 @@ const AddTodo = () => {
    * @param {event} e 
    * @returns sss
    */
+
+  /**
+   * @param {event} e
+   * used to post call of todo
+   */
   const onSubmit = (e) => {
     e.preventDefault();
     if (isEdit) {

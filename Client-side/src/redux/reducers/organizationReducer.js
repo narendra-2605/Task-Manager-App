@@ -15,7 +15,6 @@ const organizationReducer = (state = initialState, action) => {
         case CREATE_ORGANIZATION:
             return {
                 ...state,
-                // action.payload
                 organization: [
                     ...state.organization
                 ]
@@ -25,7 +24,6 @@ const organizationReducer = (state = initialState, action) => {
                 ...state,
                 organization: [...state.organization]
             }
-
         default:
             return state;
     }

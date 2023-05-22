@@ -18,8 +18,6 @@ const UserPrivateRoutes = () => {
     }
     return (
         <>
-            {/* {flag ? <Outlet /> : <Navigate to="/" />} */}
-
             {flag === 0 ? <Outlet /> : flag === 1 ? <Navigate to="/adminTodo" /> : flag === 2 ? <Navigate to="/createAdmin" /> : <Navigate to="/" />}
         </>
     )

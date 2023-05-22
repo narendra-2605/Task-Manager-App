@@ -37,7 +37,11 @@ const AdminTodo = () => {
             ...value, [e.target.name]: e.target.value
         })
     }
-
+    /**
+     * 
+     * @param {Todo Info} data 
+     * for editing the todo
+     */
     const actionClick = (data) => {
         if (data && data?.type === "edit") {
             console.log("data from adminTodo action click", data);
@@ -45,13 +49,12 @@ const AdminTodo = () => {
             dispatch(editAdminTodo(id));
         }
     };
-
-
-    // const handleDelete = (e, id) => {
-    //     console.log("User Id from admin todo:", id);
-    //     dispatch(deleteUser(id));
-    // }
-
+    /**
+     * 
+     * @param {event} e 
+     * @param {task Id} todoId 
+     * delete Task Function
+     */
     const handleDeleteTodo = (e, todoId) => {
         dispatch(deleteAdminTodo(todoId));
     }
@@ -64,12 +67,18 @@ const AdminTodo = () => {
             setSelectedTodo([]);
         }
     }
-
+    /**
+    * Mark as complete
+    */
     const markCompleted = () => {
         console.log('Selected todo markCompleted:', selectedTodo);
         dispatch(markTodoCompleted(selectedTodo));
     };
-
+    /**
+     * 
+     * @param {Event} e
+     * Post call for submitting the task by admin 
+     */
     const onSubmit = (e) => {
         e.preventDefault();
         if (isEdit) {
@@ -81,6 +90,11 @@ const AdminTodo = () => {
             dispatch(addTodo(value));
         }
     }
+    /**
+     * 
+     * @param {Event} e
+     * To serach the perticular task 
+     */
     const handleChange = (e) => {
         const results = adminTodoLists?.tasks?.filter(post => {
             if (e.target.value === "") return adminTodoLists
@@ -91,14 +105,13 @@ const AdminTodo = () => {
             list: results
         })
     }
-
-
+    
     //   ***************  Pagination *****************
+
     let todoLength;
     if (adminTodoLists?.tasks?.length) {
         todoLength = adminTodoLists?.tasks?.length;
     }
-
 
     for (let i = 1; i <= Math.ceil(todoLength / rowPerPAge); i++) {
         pageNumbers.push(i);
@@ -108,11 +121,18 @@ const AdminTodo = () => {
     const indexOfFirstRowOfCurrentPage = indexOfLastRowOfCurrentPage - rowPerPAge;
 
     const currentRows = adminTodoLists?.tasks?.slice(indexOfFirstRowOfCurrentPage, indexOfLastRowOfCurrentPage);
+    /**
+     * 
+     * @param {Move to Specific Page Number} pageNumber 
+     */
 
     const paginate = (pageNumber) => {
         setCurrentPage(pageNumber);
     }
-
+    /**
+     * 
+     * @param {No. task show in the table of } e 
+     */
     const handlePageSize = (e) => {
         setRowPerPage(e.target.value);
         setCurrentPage(1);

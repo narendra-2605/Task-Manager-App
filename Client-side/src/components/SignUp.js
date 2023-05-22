@@ -3,7 +3,6 @@ import { Outlet, Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { signUp } from '../redux/actions/authAction';
 import { ToastContainer, toast } from 'react-toastify';
-// import './css/signUp.css'
 
 const SignUp = () => {
     const dispatch = useDispatch();

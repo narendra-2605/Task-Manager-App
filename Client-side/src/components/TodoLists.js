@@ -138,7 +138,6 @@ const TodoLists = () => {
         </div>
 
         <div className="col-lg-6 col-md-6 col-xm-12 text-right">
-          {/* <button className="btn btn-danger" onClick={() => dispatch(clearAlltodo())}  > Clear Todos   </button> */}
           {selectedTodo.length > 0 && (
             <>
               <button className="btn btn-success ml-2" onClick={markCompleted}>
@@ -159,8 +158,6 @@ const TodoLists = () => {
             <th width="8%">Status</th>
             <th width="20%">Action</th>
           </tr>
-
-
         </thead>
         {
           state.query === ''

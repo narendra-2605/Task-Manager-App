@@ -15,12 +15,10 @@ const AdminPrivateRoutes = () => {
     } else {
         flag = 3;
     }
-    // let auth = {'token':flag};
     return (
         <>
             {flag === 0 ? <Outlet /> : flag === 1 ? <Navigate to="/createAdmin" /> : flag === 2 ? <Navigate to="/userTodo" /> : <Navigate to="/" />}
         </>
-        // flag ? <Outlet /> : <Navigate to="/" />
     )
 }
 export default AdminPrivateRoutes;

@@ -14,9 +14,7 @@ const localhostUserAction = process.env.REACT_APP_userServices;
 
 export const addTodo = (todo) => (dispatch) => {
     try {
-        console.log("todo from adminTodo", todo);
         const response = axios.post(`${localhostUserAction}/createTask`, todo);
-        console.log("addnew todo res:", response);
         if (response) {
             toast.success('Added Successfully', { autoClose: 1500 })
         }
@@ -36,7 +34,6 @@ export const addTodo = (todo) => (dispatch) => {
 export const getAllUser = () => async (dispatch) => {
     try {
         const response = await axios.get(localhostAuth + 'getUserList', { withCredentials: true });
-        console.log("response from get all user", response)
         dispatch({
             type: GET_ALL_USER,
             payload: response.data
@@ -50,9 +47,8 @@ export const getAllUser = () => async (dispatch) => {
 
 export const deleteUser = (id) => async (dispatch) => {
     try {
-        console.log("User id is", id);
         const response = await axios.delete(`http://localhost:3002/deleteUser/${id}`);
-        console.log("delete user response", response);
+        // console.log("delete user response", response);
         toast.success(response?.data?.message, { autoClose: 1500 });
         dispatch({
             type: DELETE_USER
@@ -80,7 +76,6 @@ export const getAdminTodos = () => async (dispatch) => {
 }
 
 export const editAdminTodo = (id) => (dispatch) => {
-    console.log("editAdminTodo is called:", id)
     dispatch({
         type: EDIT_ADMIN_TODO,
         payload: id,
@@ -90,10 +85,8 @@ export const editAdminTodo = (id) => (dispatch) => {
 
 
 export const updateAdminTask = (id, task) => async (dispatch) => {
-    console.log("Update ADMIN todo from adminAction.js");
-    console.log("Todo id:", id);
     const response = axios.put(`${localhostUserAction}/updatetask/${id}`, task);
-    console.log("Response is :", response);
+    // console.log("Response is :", response);
     if (response) {
         toast.success('Updated Successfully', { autoClose: 1500 })
     }

@@ -31,16 +31,13 @@ export const createAdmin = (data) => async (dispatch) => {
         });
     }
     catch (err) {
-        console.log(err);
         toast.danger(err);
     }
 }
 
 export const deleteAdmin = (adminId) => async (dispatch) => {
     try {
-        console.log("adminId from deleteAdmin", adminId);
         const response = axios.delete(localhostAuth + `deleteUsers/${adminId}`);
-        console.log("response is from delete admin action", response);
         dispatch({
             type: DELETE_ADMIN,
             payload: response
@@ -53,9 +50,7 @@ export const deleteAdmin = (adminId) => async (dispatch) => {
 
 export const createUser = (data) => async (dispatch) => {
     try {
-        console.log("data from cretaeUser authAdminAction", data)
         const response = await axios.post(localhostAuth + 'createUser', data);
-        console.log("Create User Response:", response);
         if (response) {
             toast.success('User Created Successfully', { autoClose: 1500 });
         }
@@ -69,21 +64,6 @@ export const createUser = (data) => async (dispatch) => {
         toast.danger(err);
     }
 }
-
-// export const getAllUser = () => async (dispatch) => {
-//     try {
-//         const response = await axios.get(localhostAuth + 'getUserList');
-//         console.log("Response get all user authAdminAction ", response.data);
-//         dispatch({
-//             type: GET_ALL_USER,
-//             payload: response.data.userList
-//         })
-//     }
-//     catch (error) {
-//         toast.error(error?.response?.data?.message, { autoClose: 1500 });
-//         console.log("error getAllOrganization", error);
-//     }
-// }
 
 export const deleteUser = (userId) => async (dispatch) => {
     try {
