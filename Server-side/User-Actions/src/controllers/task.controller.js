@@ -51,6 +51,7 @@ const getAllTaskByUserId = async (req, res) => {
         // console.log("user from getAllTaskByUserId:", req.session.passport);
         console.log("user from getAllTaskByUserId:", req.session.passport.user);
         const tasks = await Tasks.find({ createdBy: req.session.passport.user });
+        console.log("TAsks", tasks);
         res.status(200).json({ tasks });
     }
     catch (err) {

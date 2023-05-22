@@ -19,9 +19,9 @@ module.exports = function (passport) {
             }
             // if the user is properly not authenticated
             // return done(null, user);
-            console.log("after compare");
+            // console.log("after compare");
             return done({
-                message: 'Invalid password.'
+                message: 'Invalid password'
             },false 
             );
         }

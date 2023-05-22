@@ -26,6 +26,7 @@ const localhostUserAction = process.env.REACT_APP_userServices;
  * Get All todo
  */
 export const getTodos = () => async (dispatch) => {
+    console.log("getTodo func call;")
     const response = await axios.get(localhostUserAction + '/getAllTaskByUserId');
     dispatch({
         type: GET_TODOS,
@@ -167,11 +168,11 @@ export const deleteUserTodo = (id) => async (dispatch) => {
     try {
         const response = await axios.delete(`${localhostUserAction}/deleteTask/${id}`);
         dispatch({
-            type: DELETE_USER_TODO,   
+            type: DELETE_USER_TODO,
             payload: response
         })
     }
     catch (error) {
         console.log(error);
-    } 
+    }
 }

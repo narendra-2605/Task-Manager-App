@@ -16,6 +16,7 @@ import "./style.css";
 const TodoLists = () => {
   const dispatch = useDispatch();
   const todos = useSelector((state) => state?.todoReducer?.todos);
+  console.log("Todos", todos);
   const [selectedTodo, setSelectedTodo] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [rowPerPage, setRowPerPage] = useState(5);

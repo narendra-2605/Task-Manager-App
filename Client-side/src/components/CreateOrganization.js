@@ -36,8 +36,9 @@ const CreateOrganization = () => {
     const indexOfLastRowOfCurrentPage = currentPage * rowPerPAge;
     const indexOfFirstRowOfCurrentPage = indexOfLastRowOfCurrentPage - rowPerPAge;
 
-    const currentRows = organizations.slice(indexOfFirstRowOfCurrentPage, indexOfLastRowOfCurrentPage);
-
+    const currentRows = organizations?.organizationList
+    .slice(indexOfFirstRowOfCurrentPage, indexOfLastRowOfCurrentPage);
+    
     const paginate = (pageNumber) => {
         setCurrentPage(pageNumber);
     }

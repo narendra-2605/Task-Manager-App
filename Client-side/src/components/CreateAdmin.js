@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { createAdmin, getAllAdmin, deleteAdmin } from "../redux/actions/authAdminAction";
-import{getAllOrganization} from '../redux/actions/organizationAction';
+import { getAllOrganization } from '../redux/actions/organizationAction';
+import { ToastContainer, toast } from 'react-toastify';
 
 const CreateAdmin = () => {
     const [data, setData] = useState({});
@@ -81,8 +82,8 @@ const CreateAdmin = () => {
      * function to mark the perticular organization as completed
      */
 
-
     const handleChange = (e) => {
+        
         const results = admins?.filter(admin => {
             if (e.target.value === "") return admins
             return admin?.name?.toLowerCase().includes(e.target.value?.toLowerCase())
@@ -92,6 +93,7 @@ const CreateAdmin = () => {
             list: results
         })
     }
+
     const onSubmit = (e) => {
         e.preventDefault();
         console.log("Data from create Admin", data)
@@ -153,7 +155,7 @@ const CreateAdmin = () => {
                         <label className="sr-only">Select Organization</label>
                         <select className="form-select  mb-2 mr-sm-3" aria-label="Default select example" name="orgId" onChange={(e) => changeEvent(e)} >
                             <option>Select Organization</option>
-                            {organizationList?.map((organization,index) =>
+                            {organizationList?.map((organization, index) =>
                                 <option key={index} value={organization._id}>{organization.name}</option>
                             )} </select>
                     </div>
@@ -246,7 +248,7 @@ const CreateAdmin = () => {
                             let btnClass = " btn btn-outline-secondary mx-1";
                             if (number === currentPage) btnClass = "btn btn-secondary mx-1";
                             return (
-                                <button 
+                                <button
                                     className={btnClass}
                                     onClick={() => paginate(number)}
                                 >
@@ -262,7 +264,7 @@ const CreateAdmin = () => {
 
             </div>
         </div>
-
+        <ToastContainer />
     </>)
 }
 

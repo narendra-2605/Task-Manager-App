@@ -18,7 +18,6 @@ const Navbar = (props) => {
     const handleLogout = (e) => {
         dispatch(logOut());
         toast.success("logout Successfully", { autoClose: 1500 });
-        // e.preventDefault();
         localStorage.removeItem("user");
         props.setLogin(false);
         navigate('/');
@@ -55,7 +54,6 @@ const Navbar = (props) => {
                                         <li className="nav-item">
                                             <Link to='/adminTodo' className="nav-link text-light  active" aria-current="page" >Create-Task</Link>
                                         </li>
-
                                     </>
                                     : null
                             }

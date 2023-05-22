@@ -75,7 +75,7 @@ const getAdminList = async (req, res) => {
     try {
         // console.log("loged in user from getAdminList:", req.session);
         const adminList = await Users.find({ role: 'admin' });
-        res.status(201).json({ adminList});
+        res.status(201).json({ adminList });
     } catch (error) {
         console.log(error);
     }
@@ -159,29 +159,30 @@ const login = (passport) => {
             } else {
                 console.log("login:");
                 passport.authenticate("local", (err, user, info) => {
-                    console.log("before error");
+                    // console.log("before error");
                     // if (err) throw err;
-                    if(err){
-                        res.status(500).json({message:"Password Mismatched:"});
+                    if (err) {
+                        if (err.message === 'Invalid password') {
+                            res.status(201).json({ PaswordMessage: "Password Mismatched!" });
+                        }
                     }
-                    console.log(err);
-                    console.log("after err");
-                    console.log("user",user);
-                    if (!user) res.status(500).json({message:"No User Exists"});
+                    // if (err) res.status(500).json({message:err.message});
                     else {
-                        
-                        req.logIn(user, err => {
-                            if (err) throw err;
-                            const sess = req.session;
-                            const email = req.body.email;
-                            const password = req.body.password;
-                            sess.email = email;
-                            sess.pasword = password;
-                            // res.send(`Successfully Authenticated:, ${JSON.stringify(req.session)}`);
-                            // console.log("user is", user);
-                            // console.log("req.User is:", req.user);
-                            res.status(200).json({ user: user });
-                        })
+                        if (!user) res.status(201).json({ UserExistMessage: "User Does Not Exists" });
+                        else {
+                            req.logIn(user, err => {
+                                if (err) throw err;
+                                const sess = req.session;
+                                const email = req.body.email;
+                                const password = req.body.password;
+                                sess.email = email;
+                                sess.pasword = password;
+                                // res.send(`Successfully Authenticated:, ${JSON.stringify(req.session)}`);
+                                // console.log("user is", user);
+                                // console.log("req.User is:", req.user);
+                                res.status(200).json({ user: user });
+                            })
+                        }
                     }
                 })(req, res, next);
             }

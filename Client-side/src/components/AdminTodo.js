@@ -3,7 +3,6 @@ import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { ToastContainer } from 'react-toastify';
 import { getAllUser, deleteUser, addTodo, getAdminTodos, deleteAdminTodo, updateAdminTask, editAdminTodo, markTodoCompleted } from "../redux/actions/adminAction";
-
 import "./style.css";
 
 const AdminTodo = () => {
@@ -15,6 +14,12 @@ const AdminTodo = () => {
     // console.log("adminTodo List", adminTodoLists);
     const [value, setValue] = useState({});
     const [selectedTodo, setSelectedTodo] = useState([]);
+    const [state, setstate] = useState({
+        query: '', list: []
+    })
+    const [currentPage, setCurrentPage] = useState(1);
+    const [rowPerPAge, setRowPerPage] = useState(5);
+    const pageNumbers = [];
     const userId = JSON.parse(localStorage.getItem("user"))['data']['user']['_id'];
 
     useEffect(() => {
@@ -42,10 +47,10 @@ const AdminTodo = () => {
     };
 
 
-    const handleDelete = (e, id) => {
-        console.log("User Id from admin todo:", id);
-        dispatch(deleteUser(id));
-    }
+    // const handleDelete = (e, id) => {
+    //     console.log("User Id from admin todo:", id);
+    //     dispatch(deleteUser(id));
+    // }
 
     const handleDeleteTodo = (e, todoId) => {
         dispatch(deleteAdminTodo(todoId));
@@ -76,16 +81,6 @@ const AdminTodo = () => {
             dispatch(addTodo(value));
         }
     }
-
-    //   ***************  Pagination *****************
-
-    const [state, setstate] = useState({
-        query: '', list: []
-    })
-    const [currentPage, setCurrentPage] = useState(1);
-    const [rowPerPAge, setRowPerPage] = useState(5);
-    const pageNumbers = [];
-
     const handleChange = (e) => {
         const results = adminTodoLists?.tasks?.filter(post => {
             if (e.target.value === "") return adminTodoLists
@@ -97,9 +92,11 @@ const AdminTodo = () => {
         })
     }
 
+
+    //   ***************  Pagination *****************
     let todoLength;
-    if (adminTodoLists.length) {
-        todoLength = adminTodoLists.length;
+    if (adminTodoLists?.tasks?.length) {
+        todoLength = adminTodoLists?.tasks?.length;
     }
 
 
@@ -126,7 +123,7 @@ const AdminTodo = () => {
     }
 
     const handleNext = () => {
-        if (currentPage !== Math.ceil(adminTodoLists.length / rowPerPAge))
+        if (currentPage !== Math.ceil(adminTodoLists?.tasks?.length / rowPerPAge))
             setCurrentPage(currentPage + 1);
     }
 
@@ -207,7 +204,6 @@ const AdminTodo = () => {
                     </div>
                 </div>
 
-
                 <table className="table table-bordered table-hover text-center ">
                     <thead>
                         <tr>
@@ -222,10 +218,9 @@ const AdminTodo = () => {
                     {
                         state.query === ''
                             ?
-
                             <tbody>
                                 {
-                                    adminTodoLists && adminTodoLists?.tasks?.map((todo, index) => (
+                                    currentRows?.map((todo, index) => (
                                         <tr key={index}>
                                             <td>
                                                 <input type={"checkbox"}
@@ -294,6 +289,32 @@ const AdminTodo = () => {
                             })
                     }
                 </table>
+            </div>
+            <div className="container">
+                <div className="row pb-4" style={{ height: "60px" }}>
+                    <div className="col col-xm-12 text-start">
+                        <button className="btn btn-secondary align-self-start" onClick={() => handlePrevious()} > Previous </button>
+                    </div>
+                    <div className="col col-xm-12">
+                        <ul className="text-center">
+                            {pageNumbers?.map((number) => {
+                                let btnClass = " btn btn-outline-secondary mx-1";
+                                if (number === currentPage) btnClass = "btn btn-secondary mx-1";
+                                return (
+                                    <button
+                                        className={btnClass}
+                                        onClick={() => paginate(number)}
+                                    >
+                                        {number}
+                                    </button>
+                                );
+                            })}
+                        </ul>
+                    </div>
+                    <div className="col col-xm-12 text-end">
+                        <button className="btn btn-secondary ml-2 align-self-" onClick={() => handleNext()}  >   Next </button>
+                    </div>
+                </div>
             </div>
             <ToastContainer />
         </>

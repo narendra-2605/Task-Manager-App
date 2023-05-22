@@ -18,6 +18,7 @@ const CreateUser = () => {
     const dispatch = useDispatch();
     const users = useSelector((state) => state?.adminReducer?.users);
     const organizations = useSelector((state) => state?.organizationReducer?.organization);
+    console.log("organitation ", organizations);
     const [selectedTodo, setSelectedTodo] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [rowPerPAge, setRowPerPage] = useState(5);
@@ -29,8 +30,8 @@ const CreateUser = () => {
 
 
     let todoLength;
-    if (organizations.length) {
-        todoLength = organizations.length;
+    if (organizations?.organizationList?.length) {
+        todoLength = organizations?.organizationList?.length;
     }
 
     useEffect(() => {
@@ -52,7 +53,7 @@ const CreateUser = () => {
     const indexOfLastRowOfCurrentPage = currentPage * rowPerPAge;
     const indexOfFirstRowOfCurrentPage = indexOfLastRowOfCurrentPage - rowPerPAge;
 
-    const currentRows = organizations.slice(indexOfFirstRowOfCurrentPage, indexOfLastRowOfCurrentPage);
+    const currentRows = organizations?.organizationList?.slice(indexOfFirstRowOfCurrentPage, indexOfLastRowOfCurrentPage);
 
     const paginate = (pageNumber) => {
         setCurrentPage(pageNumber);
@@ -98,10 +99,12 @@ const CreateUser = () => {
 
 
     const handleChange = (e) => {
-        const results = organizations.filter(post => {
-            if (e.target.value === "") return organizations
-            return post.title.toLowerCase().includes(e.target.value.toLowerCase())
+
+        const results = organizations?.organizationList?.filter(post => {
+            if (e.target.value === "") return organizations?.organizationList
+            return post?.name?.toLowerCase()?.includes(e.target.value?.toLowerCase())
         })
+        
         setstate({
             query: e.target.value,
             list: results
@@ -191,8 +194,8 @@ const CreateUser = () => {
             <table class=" table table-hover  table-bordered ">
                 <thead>
                     <tr>
+                        <th scope="col">UserName</th>
                         <th scope="col">Name</th>
-                        <th scope="col">Organization</th>
                         <th scope="col">Email</th>
                         <th scope="col">Delete</th>
                     </tr>
