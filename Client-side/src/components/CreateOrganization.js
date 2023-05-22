@@ -11,16 +11,15 @@ const CreateOrganization = () => {
     })
     const dispatch = useDispatch();
     const organizations = useSelector((state) => state?.organizationReducer?.organization);
-    console.log("Orgaization is:", organizations);
-    // const [selectedTodo, setSelectedTodo] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [rowPerPAge, setRowPerPage] = useState(5);
     const [search, setSearch] = useState();
     const pageNumbers = [];
 
     let organizationLength;
-    if (organizations.length) {
-        organizationLength = organizations.length;
+    if (organizations?.organizationList?.length) {
+        organizationLength = organizations?.organizationList
+            ?.length;
     }
 
     useEffect(() => {
@@ -36,9 +35,8 @@ const CreateOrganization = () => {
     const indexOfLastRowOfCurrentPage = currentPage * rowPerPAge;
     const indexOfFirstRowOfCurrentPage = indexOfLastRowOfCurrentPage - rowPerPAge;
 
-    const currentRows = organizations?.organizationList
-    .slice(indexOfFirstRowOfCurrentPage, indexOfLastRowOfCurrentPage);
-    
+    const currentRows = organizations?.organizationList?.slice(indexOfFirstRowOfCurrentPage, indexOfLastRowOfCurrentPage);
+
     const paginate = (pageNumber) => {
         setCurrentPage(pageNumber);
     }
@@ -53,7 +51,8 @@ const CreateOrganization = () => {
     }
 
     const handleNext = () => {
-        if (currentPage !== Math.ceil(organizations.length / rowPerPAge))
+        if (currentPage !== Math.ceil(organizations?.organizationList
+            ?.length / rowPerPAge))
             setCurrentPage(currentPage + 1);
     }
 
@@ -64,7 +63,6 @@ const CreateOrganization = () => {
      * @param {Todo list and Action type ->  Edit or Delete todo in JSON form} data
      */
     const deleteAction = (organizationId) => {
-        console.log("organizationId from create organization", organizationId);
         dispatch(deleteOrganization(organizationId));
     }
 
@@ -80,7 +78,7 @@ const CreateOrganization = () => {
 
 
     const handleChange = (e) => {
-        const results = organizations.filter(organization => {
+        const results = organizations?.organizationList?.filter(organization => {
             if (e.target.value === "") return organizations
             return organization.name.toLowerCase().includes(e.target.value.toLowerCase())
         })
@@ -91,7 +89,6 @@ const CreateOrganization = () => {
     }
     const onSubmit = (e) => {
         e.preventDefault();
-        console.log("value from onsubmit create Organization", value)
         dispatch(createOrganization(value));
         setValue({ name: "", password: "" });
         document.getElementById("organizationForm").reset();
@@ -157,8 +154,8 @@ const CreateOrganization = () => {
                     </select>
                 </div>
             </div>
-            <table class=" table table-hover  table-bordered ">
-                <thead>
+            <table className=" table table-hover table-bordered " style={{ height: "317px", overflowY: "auto", overflowX: "hidden" }}>
+                <thead style={{ position: "sticky" }}>
                     <tr>
                         <th scope="col"> Organization Name</th>
                         <th scope="col">Organization Email</th>
@@ -204,7 +201,7 @@ const CreateOrganization = () => {
                         })
                 }
             </table>
-        </div>
+        </div >
         <div className="container">
             <div className="row pb-4" style={{ height: "60px" }}>
                 <div className="col col-xm-12 text-start">
@@ -213,11 +210,11 @@ const CreateOrganization = () => {
                 <div className="col col-xm-12">
                     <ul className="text-center">
                         {
-                            pageNumbers.map((number) => {
+                            pageNumbers?.map((number, index) => {
                                 let btnClass = " btn btn-outline-secondary mx-1";
                                 if (number === currentPage) btnClass = "btn btn-secondary mx-1";
                                 return (
-                                    <button className={btnClass}
+                                    <button key={index} className={btnClass}
                                         onClick={() => paginate(number)} >
                                         {number}
                                     </button>

@@ -37,7 +37,7 @@ const TodoLists = () => {
   for (let i = 1; i <= Math.ceil(todoLength / rowPerPage); i++) {
     pageNumbers.push(i);
   }
-  
+
   const indexOfLastRowOfCurrentPage = currentPage * rowPerPage;
   const indexOfFirstRowOfCurrentPage = indexOfLastRowOfCurrentPage - rowPerPage;
 
@@ -123,6 +123,11 @@ const TodoLists = () => {
   return (<>
     <div className="container my-2 pt-2 bg-light rounded ">
       <div className="row pb-4" style={{ height: "60px" }}>
+
+        <div className="col-lg-3 col-md-3 col-xm-12 ">
+          <input className="form-control mb-2 mr-sm-3" onChange={handleChange} value={state.query} type="search" placeholder=" Search by Name :" />
+        </div>
+
         <div className="col-lg-3 col-md-3 col-sm-12 text-left">
           <select className="form-select" onChange={(e) => handlePageSize(e)} >
             <option >Select No. Of Item</option>
@@ -131,9 +136,7 @@ const TodoLists = () => {
             <option value="15">15</option>
           </select>
         </div>
-        <div className="col-lg-3 col-md-3 col-xm-12 ">
-          <input className="form-control mb-2 mr-sm-3" onChange={handleChange} value={state.query} type="search" placeholder=" Search by Name :" />
-        </div>
+
         <div className="col-lg-6 col-md-6 col-xm-12 text-right">
           {/* <button className="btn btn-danger" onClick={() => dispatch(clearAlltodo())}  > Clear Todos   </button> */}
           {selectedTodo.length > 0 && (
@@ -257,7 +260,7 @@ const TodoLists = () => {
                 return (
                   <button className={btnClass}
                     onClick={() => paginate(number)} >
-                    {number} 
+                    {number}
                   </button>
                 );
               })
@@ -269,7 +272,7 @@ const TodoLists = () => {
         </div>
       </div>
     </div>
-    {/* <ToastContainer /> */}
+    <ToastContainer />
   </>
   );
 };

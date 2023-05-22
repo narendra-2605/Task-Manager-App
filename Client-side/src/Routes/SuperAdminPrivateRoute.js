@@ -17,8 +17,6 @@ const SuperAdminPrivateRoute = () => {
         flag = 3;
     }
 
-    console.log("flag ", flag);
-
     return (
         <>
             {

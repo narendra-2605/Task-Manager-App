@@ -157,6 +157,7 @@ const AdminTodo = () => {
                                 onChange={(e) => changeEvent(e)}
                             />
                         </div>
+
                         {isEdit ? null : <div className="col-xl-3">
                             <label className="sr-only">Select User</label>
                             <select className="form-select  mb-2 mr-sm-3" aria-label="Default select example" name="userId" onChange={(e) => changeEvent(e)} >
@@ -181,6 +182,11 @@ const AdminTodo = () => {
             <div className="container bg-light my-4 py-1 border rounded">
                 <h3 className="text-center ">Admin Todo List</h3>
                 <div className="row pb-4" style={{ height: "60px" }}>
+
+                    <div className="col-lg-3 col-md-3 col-xm-12 ">
+                        <input className="form-control mb-2 mr-sm-3" onChange={handleChange} value={state.query} type="search" placeholder=" Search by Name :" />
+                    </div>
+
                     <div className="col-lg-3 col-md-3 col-sm-12 text-left">
                         <select className="form-select" onChange={(e) => handlePageSize(e)} >
                             <option >Select No. Of Item</option>
@@ -189,9 +195,7 @@ const AdminTodo = () => {
                             <option value="15">15</option>
                         </select>
                     </div>
-                    <div className="col-lg-3 col-md-3 col-xm-12 ">
-                        <input className="form-control mb-2 mr-sm-3" onChange={handleChange} value={state.query} type="search" placeholder=" Search by Name :" />
-                    </div>
+
                     <div className="col-lg-6 col-md-6 col-xm-12 text-right">
                         {/* <button className="btn btn-danger" onClick={() => dispatch(clearAlltodo())}  > Clear Todos   </button> */}
                         {selectedTodo.length > 0 && (
@@ -256,35 +260,37 @@ const AdminTodo = () => {
                             :
                             !state.list.length ? "Your query did not return any results" : state.list.map((post, index) => {
                                 return (
-                                    <tr key={index}>
-                                        <td>
-                                            <input type={"checkbox"}
-                                                value={post?._id} onChange={(e) => checkEvent(e, post._id)}
-                                                name={`todo_${index}`} />
-                                        </td>
-                                        <td>{post?.title}</td>
-                                        <td>{post?.description}</td>
-                                        <td>
-                                            {post?.status === 'completed' ? (
-                                                <span className="badge text-bg-success p-2">Completed</span>
-                                            ) : post?.status === 'pending' ? (
-                                                <span className="badge text-bg-danger p-2">Pending</span>
-                                            ) : ''}
-                                        </td>
+                                    <tbody>
+                                        <tr key={index}>
+                                            <td>
+                                                <input type={"checkbox"}
+                                                    value={post?._id} onChange={(e) => checkEvent(e, post._id)}
+                                                    name={`todo_${index}`} />
+                                            </td>
+                                            <td>{post?.title}</td>
+                                            <td>{post?.description}</td>
+                                            <td>
+                                                {post?.status === 'completed' ? (
+                                                    <span className="badge text-bg-success p-2">Completed</span>
+                                                ) : post?.status === 'pending' ? (
+                                                    <span className="badge text-bg-danger p-2">Pending</span>
+                                                ) : ''}
+                                            </td>
 
-                                        <td>
-                                            <button
-                                                className="btn btn-primary btn-sm bi bi-pencil tooltips"
-                                                onClick={() => actionClick({ todo: post, type: "edit" })}  >
-                                                <i className="fa-solid fa-pencil"></i><span className="tooltiptext">   Edit Todo
-                                                </span>
-                                            </button>
-                                            <button className="btn btn-danger btn-sm ml-3 tooltips" onClick={(e) => handleDeleteTodo(e, post?._id)}>
-                                                <i className="fa-solid fa-trash-can"></i>
-                                                <span className="tooltiptext">Delete Todo</span>
-                                            </button>
-                                        </td>
-                                    </tr>
+                                            <td>
+                                                <button
+                                                    className="btn btn-primary btn-sm bi bi-pencil tooltips"
+                                                    onClick={() => actionClick({ todo: post, type: "edit" })}  >
+                                                    <i className="fa-solid fa-pencil"></i><span className="tooltiptext">   Edit Todo
+                                                    </span>
+                                                </button>
+                                                <button className="btn btn-danger btn-sm ml-3 tooltips" onClick={(e) => handleDeleteTodo(e, post?._id)}>
+                                                    <i className="fa-solid fa-trash-can"></i>
+                                                    <span className="tooltiptext">Delete Todo</span>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
                                 )
                             })
                     }
