@@ -50,7 +50,7 @@ const TodoLists = () => {
   const handlePageSize = (e) => {
     setRowPerPage(e.target.value);
     setCurrentPage(1);
-  }
+  } 
 
   const handlePrevious = () => {
     if (currentPage !== 1) setCurrentPage(currentPage - 1);
